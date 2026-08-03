@@ -1,0 +1,110 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5f7fb;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  color: #222;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: white;
+  border-right: 1px solid #e8e8e8;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #ff8c42;
+  margin-bottom: 40px;
+}
+
+.logo span {
+  font-size: 24px;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+nav button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: .25s;
+}
+
+nav button:hover {
+  background: #fff2e8;
+}
+
+nav .active {
+  background: #ff8c42;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  padding: 50px;
+}
+
+.content h1 {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.content p {
+  color: #666;
+  margin-bottom: 35px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+  transition: .25s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.card h3 {
+  color: #777;
+  font-size: 15px;
+  margin-bottom: 18px;
+}
+
+.card p {
+  font-size: 32px;
+  font-weight: bold;
+  color: #ff8c42;
+}
