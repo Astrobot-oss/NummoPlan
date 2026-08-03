@@ -1,17 +1,25 @@
-export default function StatCard({ title, value, subtitle }) {
+export default function StatCard({
+  title,
+  value,
+  subtitle,
+}) {
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 h-full flex flex-col justify-center">
-      <p className="text-slate-500 text-sm font-medium">
-  {title}
-</p>
+    <div className="flex h-full flex-col justify-center rounded-3xl border border-slate-100 bg-white p-5 shadow-sm transition-all duration-300 hover:shadow-lg md:p-8">
 
-<h2 className="text-6xl font-bold tracking-tight mt-4 text-slate-900">
-  {value}
-</h2>
+      <p className="text-sm font-medium text-slate-500">
+        {title}
+      </p>
 
-<p className="text-slate-500 mt-4">
-  {subtitle}
-</p>
+      <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 md:mt-4 md:text-5xl xl:text-6xl">
+        {value}
+      </h2>
+
+      {subtitle && (
+        <p className="mt-3 text-sm text-slate-500 md:mt-4 md:text-base">
+          {subtitle}
+        </p>
+      )}
+
     </div>
   );
 }

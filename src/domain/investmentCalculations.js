@@ -1,22 +1,11 @@
 export function getInvestmentStats(investment) {
-  const buyMovements = (investment.movements || []).filter(
-    (movement) => movement.type === "buy"
-  );
-
-  const totalShares = buyMovements.reduce(
-    (sum, movement) => sum + (movement.shares || 0),
-    0
-  );
-
-  const totalInvested = buyMovements.reduce(
-    (sum, movement) => sum + (movement.amount || 0),
-    0
-  );
+  const totalShares = investment.shares || 0;
 
   const averagePrice =
-    totalShares > 0
-      ? totalInvested / totalShares
-      : 0;
+    investment.purchasePrice || 0;
+
+  const totalInvested =
+    totalShares * averagePrice;
 
   const currentPrice =
     investment.currentPrice || 0;
@@ -32,12 +21,17 @@ export function getInvestmentStats(investment) {
       ? (profit / totalInvested) * 100
       : 0;
 
+  const dividends = (investment.movements || [])
+  .filter((movement) => movement.type === "dividend")
+  .reduce((sum, movement) => sum + (movement.amount || 0), 0);
+
   return {
     totalShares,
     totalInvested,
     averagePrice,
     currentValue,
     profit,
+    dividends,
     percentage,
   };
 }

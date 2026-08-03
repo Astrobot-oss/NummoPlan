@@ -1,18 +1,24 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  loadData,
+  saveData,
+} from "../utils/storage";
 
 const GoalContext = createContext();
 
 export function GoalProvider({ children }) {
-  const [goals, setGoals] = useState(() => {
-    const saved = localStorage.getItem("piggyvault-goals");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [goals, setGoals] = useState(() =>
+    loadData("goals")
+  );
 
   useEffect(() => {
-    localStorage.setItem(
-      "piggyvault-goals",
-      JSON.stringify(goals)
-    );
+    saveData("goals", goals);
   }, [goals]);
 
   return (

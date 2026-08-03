@@ -6,36 +6,40 @@ import ChartCard from "../components/ChartCard";
 
 export default function Dashboard() {
   return (
-    <PageContainer>
+  <PageContainer>
 
-      <Header />
+    <Header />
 
-      <>
-  <StatCard
-    title="Patrimonio Neto"
-    value="0 €"
-    
-  />
-
-  <div className="grid grid-cols-3 gap-6 mt-6">
-    <SmallStatCard
-      title="Objetivos"
-      value="0 %"
-    />
-
-    <SmallStatCard
-      title="Inversiones"
+    <StatCard
+      title="Patrimonio Neto"
       value="0 €"
     />
 
-    <SmallStatCard
-      title="Deudas"
-      value="0 €"
-    />
-  </div>
-</>
-<ChartCard />
+    <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
 
-    </PageContainer>
-  );
+      <SmallStatCard
+        title="Objetivos"
+        value="0 %"
+      />
+
+      <SmallStatCard
+        title="Inversiones"
+        value="0 €"
+      />
+
+      <SmallStatCard
+        title="Deudas"
+        value="0 €"
+      />
+
+    </div>
+
+    <div className="mt-6">
+
+      <ChartCard />
+
+    </div>
+
+  </PageContainer>
+);
 }

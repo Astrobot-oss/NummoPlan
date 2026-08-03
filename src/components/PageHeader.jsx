@@ -4,24 +4,28 @@ export default function PageHeader({
   action,
 }) {
   return (
-    <div className="flex items-start justify-between gap-6 mb-8">
+    <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+
       <div>
-        <h1 className="text-4xl font-bold text-slate-900">
+
+        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">
           {title}
         </h1>
 
         {description && (
-          <p className="mt-2 text-slate-500">
+          <p className="mt-2 max-w-2xl text-sm text-slate-500 md:text-base">
             {description}
           </p>
         )}
+
       </div>
 
       {action && (
-        <div>
+        <div className="flex flex-wrap gap-3">
           {action}
         </div>
       )}
+
     </div>
   );
 }

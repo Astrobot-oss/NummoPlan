@@ -5,8 +5,8 @@ export default function InvestmentSummaryCard({
   profit,
   percentage,
   totalShares,
-}) {
-  return (
+  dividends,
+}) { (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
 
       <h3 className="mb-5 text-lg font-semibold">
@@ -66,7 +66,17 @@ export default function InvestmentSummaryCard({
           </p>
 
         </div>
+<div>
 
+  <p className="text-sm text-slate-500">
+    Dividendos cobrados
+  </p>
+
+  <p className="font-semibold text-green-600">
+    {(dividends || 0).toLocaleString("es-ES")} €
+  </p>
+
+</div>
         <div>
 
           <p className="text-sm text-slate-500">

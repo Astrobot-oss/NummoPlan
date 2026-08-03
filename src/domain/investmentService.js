@@ -70,6 +70,87 @@ export function addContribution(
     };
   });
 }
+export function sellInvestment(
+  investments,
+  investmentId,
+  data
+) {
+  return investments.map((investment) => {
+
+    if (investment.id !== investmentId) {
+      return investment;
+    }
+
+    const remainingShares =
+      investment.shares - data.shares;
+
+    return {
+
+      ...investment,
+
+      shares: remainingShares,
+
+      movements: [
+
+        ...investment.movements,
+
+        {
+
+          id: crypto.randomUUID(),
+
+          type: "sell",
+
+          amount: data.amount,
+
+          shares: data.shares,
+
+          price: data.price,
+
+          date: new Date().toISOString(),
+
+        },
+
+      ],
+
+    };
+
+  });
+}
+export function addDividend(
+  investments,
+  investmentId,
+  amount
+) {
+  return investments.map((investment) => {
+
+    if (investment.id !== investmentId) {
+      return investment;
+    }
+
+    return {
+
+      ...investment,
+
+      movements: [
+
+        ...investment.movements,
+
+        {
+          id: crypto.randomUUID(),
+
+          type: "dividend",
+
+          amount,
+
+          date: new Date().toISOString(),
+        },
+
+      ],
+
+    };
+
+  });
+}
 
 export function updateCurrentValue(
   investments,
