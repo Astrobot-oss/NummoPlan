@@ -2,9 +2,9 @@ export default function InvestmentHistory({
   investment,
 }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 sm:space-y-5">
 
-      <h3 className="text-xl font-semibold">
+      <h3 className="text-lg font-semibold sm:text-xl">
         Historial
       </h3>
 
@@ -16,10 +16,10 @@ export default function InvestmentHistory({
         investment.movements
           .slice()
           .reverse()
-          .map((movement, index) => (
+          .map((movement) => (
             <div
-              key={index}
-              className="rounded-xl border border-slate-200 p-4"
+              key={movement.id}
+              className="rounded-xl border border-slate-200 p-4 sm:p-5"
             >
               <p className="font-medium">
                 {movement.type === "buy"
@@ -33,18 +33,18 @@ export default function InvestmentHistory({
                 ).toLocaleDateString("es-ES")}
               </p>
 
-              <p className="mt-2">
+              <p className="mt-2 break-words font-medium">
                 {movement.amount.toLocaleString("es-ES")} €
               </p>
 
-              <p className="text-sm text-slate-500">
+              <p className="break-words text-sm text-slate-500">
                 {movement.shares.toLocaleString("es-ES", {
                   maximumFractionDigits: 4,
                 })}{" "}
                 participaciones
               </p>
 
-              <p className="text-sm text-slate-500">
+              <p className="break-words text-sm text-slate-500">
                 {movement.price.toLocaleString("es-ES")} €/participación
               </p>
             </div>

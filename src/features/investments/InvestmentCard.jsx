@@ -1,6 +1,7 @@
 import ClickableCardHeader from "../../components/ClickableCardHeader";
 import ActionMenu from "../../components/ActionMenu";
 import { getInvestmentStats } from "../../domain/investmentCalculations";
+import PrimaryButton from "../../components/PrimaryButton";
 
 export default function InvestmentCard({
   investment,
@@ -17,7 +18,7 @@ export default function InvestmentCard({
 } = getInvestmentStats(investment);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 
       <ClickableCardHeader to={`/inversiones/${investment.id}`}>
 
@@ -37,11 +38,11 @@ export default function InvestmentCard({
 
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="ml-3 flex items-start gap-2 sm:gap-3">
 
           <div className="text-right">
 
-            <p className="text-xl font-bold">
+            <p className="text-lg font-bold sm:text-xl">
               {currentValue.toLocaleString("es-ES")} €
             </p>
 
@@ -65,62 +66,59 @@ export default function InvestmentCard({
 
       </ClickableCardHeader>
 
-      <div className="mt-5 space-y-2 text-sm text-slate-500">
+      <div className="mt-5 space-y-3 text-sm">
 
-        <p>
-          Invertido{" "}
-          <span className="font-medium text-slate-700">
-            {totalInvested.toLocaleString("es-ES")} €
-          </span>
-        </p>
+  <div className="flex items-center justify-between gap-4">
+    <span className="text-slate-500">Invertido</span>
+    <span className="break-words text-right font-medium text-slate-700">
+      {totalInvested.toLocaleString("es-ES")} €
+    </span>
+  </div>
 
-        <p>
-          Participaciones{" "}
-          <span className="font-medium text-slate-700">
-            {totalShares.toLocaleString("es-ES", {
-              maximumFractionDigits: 4,
-            })}
-          </span>
-        </p>
+  <div className="flex items-center justify-between gap-4">
+    <span className="text-slate-500">Participaciones</span>
+    <span className="break-words text-right font-medium text-slate-700">
+      {totalShares.toLocaleString("es-ES", {
+        maximumFractionDigits: 4,
+      })}
+    </span>
+  </div>
 
-        <p>
-          Precio medio{" "}
-          <span className="font-medium text-slate-700">
-            {averagePrice.toLocaleString("es-ES")} €
-          </span>
-        </p>
+  <div className="flex items-center justify-between gap-4">
+    <span className="text-slate-500">Precio medio</span>
+    <span className="break-words text-right font-medium text-slate-700">
+      {averagePrice.toLocaleString("es-ES")} €
+    </span>
+  </div>
 
-        <p>
-          Precio actual{" "}
-          <span className="font-medium text-slate-700">
-            {investment.currentPrice.toLocaleString("es-ES")} €
-          </span>
-        </p>
+  <div className="flex items-center justify-between gap-4">
+    <span className="text-slate-500">Precio actual</span>
+    <span className="break-words text-right font-medium text-slate-700">
+      {investment.currentPrice.toLocaleString("es-ES")} €
+    </span>
+  </div>
 
-        <p>
-          Última actualización{" "}
-          <span className="font-medium text-slate-700">
-            {new Date(investment.lastUpdate).toLocaleDateString("es-ES")}
-          </span>
-        </p>
+  <div className="flex items-center justify-between gap-4">
+    <span className="text-slate-500">Actualizado</span>
+    <span className="break-words text-right font-medium text-slate-700">
+      {new Date(investment.lastUpdate).toLocaleDateString("es-ES")}
+    </span>
+  </div>
 
-      </div>
+</div>
 
-      <div className="mt-6 flex flex-col gap-2">
+      <div className="mt-6 flex flex-col gap-3">
 
-        <button
-          onClick={() => onUpdateValue(investment)}
-          className="w-full rounded-xl bg-orange-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-600"
-        >
-          Actualizar valor
-        </button>
+        <PrimaryButton onClick={() => onUpdateValue(investment)}>
+  Actualizar valor
+</PrimaryButton>
 
-        <button
-          onClick={() => onContribution(investment)}
-          className="w-full rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-800"
-        >
-          Añadir aportación
-        </button>
+<PrimaryButton
+  onClick={() => onContribution(investment)}
+  className="bg-slate-900 hover:bg-slate-800"
+>
+  Añadir aportación
+</PrimaryButton>
 
       </div>
 

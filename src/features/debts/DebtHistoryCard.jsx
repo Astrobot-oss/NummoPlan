@@ -2,9 +2,9 @@ export default function DebtHistoryCard({
   debt,
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Historial de pagos
       </h3>
 
@@ -31,10 +31,10 @@ export default function DebtHistoryCard({
 
               <div
                 key={movement.id}
-                className="rounded-2xl bg-slate-50 p-4"
+                className="rounded-2xl bg-slate-50 p-4 sm:p-5"
               >
 
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
                   <div>
 
@@ -50,19 +50,19 @@ export default function DebtHistoryCard({
 
                   </div>
 
-                  <p className="text-xl font-bold text-green-600">
+                  <p className="break-words text-xl font-bold text-green-600 sm:text-2xl">
                     {movement.amount.toLocaleString("es-ES")} €
                   </p>
 
                 </div>
 
-                <div className="mt-4 flex justify-between text-sm">
+                <div className="mt-4 flex items-center justify-between gap-4 text-sm">
 
                   <span className="text-slate-500">
                     Saldo restante
                   </span>
 
-                  <span className="font-medium">
+                  <span className="break-words text-right font-medium">
                     {movement.remaining.toLocaleString("es-ES")} €
                   </span>
 

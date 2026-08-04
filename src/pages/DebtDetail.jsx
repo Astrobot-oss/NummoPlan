@@ -20,9 +20,9 @@ export default function DebtDetail() {
 
   if (!debt) {
     return (
-      <div className="p-8">
-        Deuda no encontrada.
-      </div>
+      <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
+  Deuda no encontrada.
+</div>
     );
   }
 
@@ -30,24 +30,18 @@ export default function DebtDetail() {
     <div className="space-y-8">
 
       <PageHeader
-        title="Detalle de la deuda"
-        description="Consulta toda la información de esta deuda."
-      />
+  title={debt.name}
+  description="Consulta toda la información de esta deuda."
+/>
 
-      <div className="grid grid-cols-3 gap-6">
-
-        {/* Panel principal */}
-
-        <div className="col-span-2 space-y-6">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <div className="space-y-6 xl:col-span-2">
 
           <DebtProgressGauge debt={debt} />
 
           <DebtHistoryCard debt={debt} />
 
         </div>
-
-        {/* Panel lateral */}
-
         <div className="space-y-6">
 
           <DebtSummaryCard debt={debt} />

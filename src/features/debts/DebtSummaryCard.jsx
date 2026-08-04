@@ -11,9 +11,9 @@ export default function DebtSummaryCard({
   } = getDebtStats(debt);
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Resumen
       </h3>
 
@@ -34,7 +34,7 @@ export default function DebtSummaryCard({
             Pagado
           </p>
 
-          <p className="font-semibold text-green-600">
+          <p className="break-words font-semibold text-green-600">
             {totalPaid.toLocaleString("es-ES")} €
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function DebtSummaryCard({
             Pendiente
           </p>
 
-          <p className="font-semibold text-red-500">
+          <p className="break-words font-semibold text-red-500">
             {remaining.toLocaleString("es-ES")} €
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function DebtSummaryCard({
         </div>
 
         {completed && (
-          <div className="rounded-2xl bg-green-50 p-3 text-center">
+          <div className="mt-2 rounded-2xl bg-green-50 p-3 text-center">
 
             <p className="font-semibold text-green-600">
               ✓ Deuda liquidada

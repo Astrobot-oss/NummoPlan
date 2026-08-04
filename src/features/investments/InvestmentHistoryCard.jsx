@@ -2,8 +2,8 @@ export default function InvestmentHistoryCard({
   investment,
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
-      <h3 className="mb-5 text-lg font-semibold">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Movimientos
       </h3>
 
@@ -21,9 +21,9 @@ export default function InvestmentHistoryCard({
             .map((movement) => (
               <div
                 key={movement.id}
-                className="rounded-2xl bg-slate-50 p-4"
+                className="rounded-2xl bg-slate-50 p-4 sm:p-5"
               >
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div>
                     <p className="text-xl font-semibold">
                       {movement.type === "buy" &&
@@ -46,7 +46,7 @@ export default function InvestmentHistoryCard({
                     </p>
                   </div>
 
-                  <p className="text-2xl font-bold">
+                  <p className="break-words text-xl font-bold text-right sm:text-2xl">
                     {movement.amount.toLocaleString(
                       "es-ES"
                     )}{" "}
@@ -54,17 +54,17 @@ export default function InvestmentHistoryCard({
                   </p>
                 </div>
 
-                <div className="mt-4 space-y-2 text-sm">
+                <div className="mt-4 space-y-3 text-sm">
 
                   {movement.type ===
                     "buy" && (
                     <>
-                      <div className="flex justify-between">
+                      <div className="flex items-center justify-between gap-4">
                         <span className="text-slate-500">
                           Participaciones
                         </span>
 
-                        <span className="font-medium">
+                        <span className="break-words text-right font-medium">
                           {movement.shares.toLocaleString(
                             "es-ES",
                             {
@@ -75,12 +75,12 @@ export default function InvestmentHistoryCard({
                         </span>
                       </div>
 
-                      <div className="flex justify-between">
+                      <div className="flex items-center justify-between gap-4">
                         <span className="text-slate-500">
                           Precio compra
                         </span>
 
-                        <span className="font-medium">
+                        <span className="break-words text-right font-medium">
                           {movement.price.toLocaleString(
                             "es-ES"
                           )}{" "}
@@ -93,12 +93,12 @@ export default function InvestmentHistoryCard({
                   {movement.type ===
                     "sell" && (
                     <>
-                      <div className="flex justify-between">
+                      <div className="flex items-center justify-between gap-4">
                         <span className="text-slate-500">
                           Participaciones
                         </span>
 
-                        <span className="font-medium">
+                        <span className="break-words text-right font-medium">
                           {movement.shares.toLocaleString(
                             "es-ES",
                             {
@@ -109,12 +109,12 @@ export default function InvestmentHistoryCard({
                         </span>
                       </div>
 
-                      <div className="flex justify-between">
+                      <div className="flex items-center justify-between gap-4">
                         <span className="text-slate-500">
                           Precio venta
                         </span>
 
-                        <span className="font-medium">
+                        <span className="break-words text-right font-medium">
                           {movement.price.toLocaleString(
                             "es-ES"
                           )}{" "}
@@ -126,12 +126,12 @@ export default function InvestmentHistoryCard({
 
                   {movement.type ===
                     "dividend" && (
-                    <div className="flex justify-between">
+                    <div className="flex items-center justify-between gap-4">
                       <span className="text-slate-500">
                         Concepto
                       </span>
 
-                      <span className="font-medium">
+                      <span className="break-words text-right font-medium">
                         Dividendo recibido
                       </span>
                     </div>

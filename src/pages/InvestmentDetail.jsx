@@ -45,7 +45,7 @@ export default function InvestmentDetail() {
 
   if (!investment) {
     return (
-      <div className="p-8">
+      <div className="rounded-3xl bg-white p-8 text-center shadow-sm">
         Inversión no encontrada.
       </div>
     );
@@ -97,6 +97,10 @@ export default function InvestmentDetail() {
     setUpdateOpen(false);
   }
 
+  function handleCloseBuyModal() {
+  setBuyOpen(false);
+}
+
   return (
     <div className="space-y-8">
 
@@ -130,7 +134,7 @@ export default function InvestmentDetail() {
                 setUpdateOpen(true)
               }
             >
-              Actualizar valor
+              Actualizar
             </PrimaryButton>
           </>
         }
@@ -138,7 +142,7 @@ export default function InvestmentDetail() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
-        <div className="xl:col-span-2 rounded-3xl bg-white p-6 shadow-sm xl:p-8">
+        <div className="xl:col-span-2 rounded-3xl bg-white p-5 shadow-sm sm:p-6 xl:p-8">
 
           <h2 className="text-xl font-bold xl:text-2xl">
             Gráfica
@@ -164,7 +168,7 @@ export default function InvestmentDetail() {
                   Todavía no hay suficiente historial
                 </p>
 
-                <p className="mt-2 text-slate-500">
+                <p className="mt-2 text-sm leading-6 text-slate-500 sm:text-base">
                   La gráfica aparecerá automáticamente
                   conforme registres valores en
                   distintos días.
@@ -178,7 +182,7 @@ export default function InvestmentDetail() {
 
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5 sm:space-y-6">
 
           <InvestmentSummaryCard
             investment={investment}
@@ -206,7 +210,7 @@ export default function InvestmentDetail() {
 
       <Modal
         open={buyOpen}
-        onClose={() => setBuyOpen(false)}
+        onClose={handleCloseBuyModal}
       >
         <BuySharesModal
           investment={investment}

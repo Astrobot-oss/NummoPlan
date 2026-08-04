@@ -24,7 +24,7 @@ export default function ContributionModal({
     >
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl font-bold sm:text-2xl">
             Añadir dinero
           </h2>
 
@@ -39,14 +39,15 @@ export default function ContributionModal({
           </label>
 
           <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded-xl border border-slate-300 px-4 py-3"
-          />
+  type="number"
+  inputMode="decimal"
+  value={amount}
+  onChange={(e) => setAmount(e.target.value)}
+  className="w-full rounded-xl border border-slate-300 px-4 py-3 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+ />
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
           <PrimaryButton onClick={handleSubmit}>
             Añadir
           </PrimaryButton>

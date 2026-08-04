@@ -3,20 +3,20 @@ export default function GoalInfoCard({
   savedAmount,
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Información
       </h3>
 
-      <div className="space-y-4">
+      <div className="space-y-5">
 
         <div>
           <p className="text-sm text-slate-500">
             Nombre
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {goal.name}
           </p>
         </div>
@@ -26,7 +26,7 @@ export default function GoalInfoCard({
             Plazo
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {goal.hasDeadline
               ? `${goal.deadlineMonth} ${goal.deadlineYear}`
               : "Sin plazo"}
@@ -38,7 +38,7 @@ export default function GoalInfoCard({
             Aportaciones realizadas
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {goal.movements.length}
           </p>
         </div>
@@ -48,7 +48,7 @@ export default function GoalInfoCard({
             Ahorro medio
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {goal.movements.length > 0
               ? (
                   savedAmount /

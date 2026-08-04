@@ -15,6 +15,12 @@ export default function SellSharesModal({
       : 0;
 
   function handleSubmit() {
+    if (
+  Number(shares) <= 0 ||
+  Number(shares) > investment.shares
+) {
+  return;
+}
     onSubmit({
       shares: Number(shares),
       amount: total,
@@ -27,7 +33,7 @@ export default function SellSharesModal({
   return (
     <div className="space-y-5">
 
-      <h2 className="text-2xl font-bold">
+      <h2 className="text-xl font-bold sm:text-2xl">
         Vender participaciones
       </h2>
 
@@ -44,16 +50,17 @@ export default function SellSharesModal({
         </label>
 
         <input
-          type="number"
-          max={maxShares}
-          value={shares}
-          onChange={(e) => setShares(e.target.value)}
-          className="w-full rounded-xl border p-3"
-        />
+  type="number"
+  inputMode="decimal"
+  max={maxShares}
+  value={shares}
+  onChange={(e) => setShares(e.target.value)}
+  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+/>
 
       </div>
 
-      <div className="rounded-2xl bg-slate-50 p-4">
+      <div className="rounded-2xl bg-slate-50 p-4 sm:p-5">
 
         <p className="text-sm text-slate-500">
 
@@ -61,7 +68,7 @@ export default function SellSharesModal({
 
         </p>
 
-        <p className="text-xl font-bold">
+        <p className="break-words text-xl font-bold sm:text-2xl">
 
           {total.toLocaleString("es-ES")} €
 

@@ -56,18 +56,14 @@ export default function GoalDetail() {
 }
 
   return (
-  <div className="space-y-8">
+  <div className="space-y-6 lg:space-y-8">
 
     <PageHeader
       title={goal.name}
-      description="Consulta el progreso de tu objetivo."
-      action={
-        <div className="flex gap-3">
-        </div>
-      }
+      description="Consulta el progreso de tu objetivo."  
     />
 
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
 
       <GoalProgressCard
         progress={progress}
@@ -75,7 +71,7 @@ export default function GoalDetail() {
         onContribution={() => setContributionOpen(true)}
       />
 
-      <div className="space-y-6">
+      <div className="space-y-6 xl:col-span-1">
 
         <GoalSummaryCard
           goal={goal}

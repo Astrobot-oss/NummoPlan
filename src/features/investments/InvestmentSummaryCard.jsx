@@ -6,10 +6,11 @@ export default function InvestmentSummaryCard({
   percentage,
   totalShares,
   dividends,
-}) { (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+}) { 
+  return (
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Resumen
       </h3>
 
@@ -21,7 +22,7 @@ export default function InvestmentSummaryCard({
             Valor actual
           </p>
 
-          <p className="text-2xl font-bold">
+          <p className="break-words text-xl font-bold sm:text-2xl">
             {(currentValue || 0).toLocaleString("es-ES")} €
           </p>
 
@@ -33,7 +34,7 @@ export default function InvestmentSummaryCard({
             Capital invertido
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {(invested || 0).toLocaleString("es-ES")} €
           </p>
 
@@ -47,20 +48,20 @@ export default function InvestmentSummaryCard({
 
           <p
             className={
-              profit >= 0
-                ? "font-semibold text-green-600"
-                : "font-semibold text-red-600"
-            }
+  profit >= 0
+    ? "break-words font-semibold text-green-600"
+    : "break-words font-semibold text-red-600"
+}
           >
             {(profit || 0).toLocaleString("es-ES")} €
           </p>
 
           <p
             className={
-              profit >= 0
-                ? "text-green-600"
-                : "text-red-600"
-            }
+  profit >= 0
+    ? "break-words text-green-600"
+    : "break-words text-red-600"
+}
           >
             {(percentage || 0).toFixed(2)} %
           </p>
@@ -83,7 +84,7 @@ export default function InvestmentSummaryCard({
             Participaciones
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {(totalShares || 0).toLocaleString("es-ES", {
               maximumFractionDigits: 4,
             })}
@@ -97,7 +98,7 @@ export default function InvestmentSummaryCard({
             Precio actual
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {(investment.currentPrice || 0).toLocaleString("es-ES")} €
           </p>
 

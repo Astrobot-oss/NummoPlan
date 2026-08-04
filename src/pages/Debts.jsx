@@ -75,19 +75,20 @@ export default function Debts() {
     setDebtToPay(null);
   }
 
+  function handleOpenCreateDebt() {
+  setEditingDebt(null);
+  setOpen(true);
+}
+
   return (
     <div className="space-y-8">
-
       <PageHeader
         title="Deudas"
         description="Controla el pago de tus préstamos y obligaciones."
         action={
           <PrimaryButton
             icon={Plus}
-            onClick={() => {
-              setEditingDebt(null);
-              setOpen(true);
-            }}
+            onClick={handleOpenCreateDebt}
           >
             Nueva deuda
           </PrimaryButton>
@@ -100,9 +101,10 @@ export default function Debts() {
           title="Todavía no tienes deudas"
           description="Empieza registrando tu primera deuda."
           buttonText="Nueva deuda"
+          onClick={handleOpenCreateDebt}
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
 
           {debts.map((debt) => (
             <DebtCard

@@ -47,11 +47,11 @@ export default function GoalCard({
 
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="ml-3 flex items-start gap-2 sm:gap-3">
 
           <div className="text-right">
 
-            <p className="text-lg font-semibold text-orange-500">
+            <p className="text-base font-semibold text-orange-500 sm:text-lg">
               {goal.targetAmount.toLocaleString("es-ES")} €
             </p>
 
@@ -77,8 +77,10 @@ export default function GoalCard({
 
       <div className="mt-6">
 
-        <div className="mb-2 flex justify-end text-sm font-medium text-slate-500">
-          {Math.round(progress)}%
+        <div className="mb-2 flex justify-between text-sm font-medium text-slate-500">
+          <span>Progreso</span>
+
+<span>{Math.round(progress)}%</span>
         </div>
 
         <div className="h-3 overflow-hidden rounded-full bg-slate-200">
@@ -99,7 +101,7 @@ export default function GoalCard({
         <div className="mt-4">
 
           <p
-            className={`font-medium ${
+  className={`text-sm font-medium sm:text-base ${
               completed
                 ? "text-green-600"
                 : "text-orange-500"
@@ -125,8 +127,8 @@ export default function GoalCard({
       <div className="mt-6">
 
         <button
-          onClick={() => onAddMoney(debt)}
-          className="w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-orange-600"
+          onClick={() => onAddMoney(goal)}
+          className="w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-orange-600"
         >
           + Nueva aportación
         </button>

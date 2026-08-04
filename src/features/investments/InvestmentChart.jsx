@@ -30,27 +30,37 @@ export default function InvestmentChart({ history = [] }) {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={320}>
+    <ResponsiveContainer width="100%" height={280}>
       <LineChart
         data={data}
         margin={{
-          top: 10,
-          right: 20,
-          left: 10,
-          bottom: 0,
-        }}
+  top: 10,
+  right: 10,
+  left: 0,
+  bottom: 0,
+}}
       >
         <CartesianGrid
           strokeDasharray="4 4"
         />
 
-        <XAxis dataKey="date" />
+        <XAxis
+  dataKey="date"
+  tick={{ fontSize: 12 }}
+  tickMargin={8}
+/>
 
         <YAxis
-          domain={["auto", "auto"]}
-        />
+  width={45}
+  domain={["auto", "auto"]}
+  tick={{ fontSize: 12 }}
+/>
 
-        <Tooltip />
+        <Tooltip
+  contentStyle={{
+    borderRadius: "12px",
+  }}
+/>
 
         <Line
           type="monotone"
@@ -58,10 +68,10 @@ export default function InvestmentChart({ history = [] }) {
           stroke="#f97316"
           strokeWidth={3}
           dot={{
-            r: 4,
+            r: 3,
           }}
           activeDot={{
-            r: 6,
+            r: 5,
           }}
         />
       </LineChart>

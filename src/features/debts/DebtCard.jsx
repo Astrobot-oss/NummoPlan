@@ -1,6 +1,7 @@
 import ActionMenu from "../../components/ActionMenu";
 import ClickableCardHeader from "../../components/ClickableCardHeader";
 import { getDebtStats } from "../../domain/debtCalculations";
+import PrimaryButton from "../../components/PrimaryButton";
 
 export default function DebtCard({
   debt,
@@ -16,7 +17,7 @@ export default function DebtCard({
   } = getDebtStats(debt);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 
       <ClickableCardHeader to={`/deudas/${debt.id}`}>
 
@@ -40,11 +41,11 @@ export default function DebtCard({
 
         </div>
 
-        <div className="flex items-start gap-3">
+        <div className="ml-3 flex items-start gap-2 sm:gap-3">
 
           <div className="text-right">
 
-            <p className="text-lg font-semibold text-orange-500">
+            <p className="break-words text-lg font-semibold text-orange-500 sm:text-xl">
               {debt.targetAmount.toLocaleString("es-ES")} €
             </p>
 
@@ -92,12 +93,12 @@ export default function DebtCard({
         <div className="mt-4">
 
           <p
-            className={`font-medium ${
-              completed
-                ? "text-green-600"
-                : "text-red-500"
-            }`}
-          >
+  className={`break-words font-medium ${
+    completed
+      ? "text-green-600"
+      : "text-red-500"
+  }`}
+>
             {totalPaid.toLocaleString("es-ES")} € pagados
           </p>
 
@@ -106,7 +107,7 @@ export default function DebtCard({
               ✓ Deuda liquidada
             </p>
           ) : (
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mt-1 break-words text-sm text-slate-500">
               {remaining.toLocaleString("es-ES")} € pendientes
             </p>
           )}
@@ -115,14 +116,13 @@ export default function DebtCard({
 
       </div>
 
-      <div className="mt-6">
+     <div className="mt-6 pt-1"> 
 
-        <button
-          onClick={() => onPayment(debt)}
-          className="w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-medium text-white transition hover:bg-orange-600"
-        >
-          Registrar pago
-        </button>
+        <PrimaryButton
+  onClick={() => onPayment(debt)}
+>
+  Registrar pago
+</PrimaryButton>
 
       </div>
 

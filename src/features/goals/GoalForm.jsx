@@ -43,7 +43,7 @@ onSubmit(goalData);
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">
+        <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
   {goal ? "Editar objetivo" : "Nuevo objetivo"}
 </h2>
 
@@ -59,19 +59,19 @@ onSubmit(goalData);
   </label>
 
   <input
-    type="text"
-    placeholder="Ej. Viaje a Japón"
-    value={name}
-    onChange={(e) => setName(e.target.value)}
-    className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500"
-  />
+  type="text"
+  placeholder="Ej. Viaje a Japón"
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+ />
 </div>
       <div className="space-y-4">
   <label className="block text-sm font-medium text-slate-700">
     Plazo
   </label>
 
-  <label className="flex items-center gap-3">
+  <label className="flex cursor-pointer items-center gap-3">
     <input
       type="radio"
       checked={!hasDeadline}
@@ -93,7 +93,7 @@ onSubmit(goalData);
 </div>
 
 {hasDeadline && (
-  <div className="grid grid-cols-2 gap-4">
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
     <div>
       <label className="mb-2 block text-sm font-medium text-slate-700">
         Mes
@@ -102,7 +102,7 @@ onSubmit(goalData);
       <select
         value={deadlineMonth}
         onChange={(e) => setDeadlineMonth(e.target.value)}
-        className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
       >
         <option value="">Seleccionar</option>
 
@@ -127,11 +127,12 @@ onSubmit(goalData);
       </label>
 
       <input
-        type="number"
+  type="number"
+  inputMode="numeric"
         value={deadlineYear}
         onChange={(e) => setDeadlineYear(e.target.value)}
         placeholder="2028"
-        className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
       />
     </div>
   </div>
@@ -143,16 +144,17 @@ onSubmit(goalData);
         </label>
 
         <input
-          type="number"
-          placeholder="10000"
+  type="number"
+  inputMode="decimal"
+  placeholder="10000"
           value={amount}
 onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
         />
       </div>
       
 
-<div className="flex justify-end gap-3 pt-2">
+<div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
   <PrimaryButton onClick={handleSubmit}>
   {goal ? "Guardar cambios" : "Crear objetivo"}
 </PrimaryButton>

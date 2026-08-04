@@ -4,9 +4,9 @@ export default function InvestmentInfoCard({
   averagePrice,
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Información
       </h3>
 
@@ -17,7 +17,7 @@ export default function InvestmentInfoCard({
             Tipo
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {investment.type || "-"}
           </p>
         </div>
@@ -27,7 +27,7 @@ export default function InvestmentInfoCard({
             Broker
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {investment.broker || "-"}
           </p>
         </div>
@@ -37,7 +37,7 @@ export default function InvestmentInfoCard({
             Participaciones
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {(totalShares || 0).toLocaleString("es-ES", {
               maximumFractionDigits: 4,
             })}
@@ -49,7 +49,7 @@ export default function InvestmentInfoCard({
             Precio medio
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {(averagePrice || 0).toLocaleString("es-ES", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
@@ -62,7 +62,7 @@ export default function InvestmentInfoCard({
             Operaciones
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {investment.movements?.length || 0}
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function InvestmentInfoCard({
             Última actualización
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {investment.lastUpdate
               ? new Date(investment.lastUpdate).toLocaleDateString("es-ES")
               : "-"}

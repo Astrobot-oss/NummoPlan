@@ -6,9 +6,9 @@ export default function GoalSummaryCard({
   completed,
 }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Resumen
       </h3>
 
@@ -19,7 +19,7 @@ export default function GoalSummaryCard({
             Objetivo
           </p>
 
-          <p className="text-2xl font-bold">
+          <p className="break-words text-xl font-bold sm:text-2xl">
             {goal.targetAmount.toLocaleString("es-ES")} €
           </p>
         </div>
@@ -29,7 +29,7 @@ export default function GoalSummaryCard({
             Ahorrado
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {savedAmount.toLocaleString("es-ES")} €
           </p>
         </div>
@@ -39,7 +39,7 @@ export default function GoalSummaryCard({
             Restante
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {remainingAmount.toLocaleString("es-ES")} €
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function GoalSummaryCard({
             Progreso
           </p>
 
-          <p className="font-semibold">
+          <p className="break-words font-semibold">
             {Math.round(progress)} %
           </p>
         </div>

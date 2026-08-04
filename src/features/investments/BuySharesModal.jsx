@@ -13,14 +13,15 @@ export default function ContributionModal({
       : 0;
 
   function handleSubmit() {
-    onSubmit(Number(amount));
-    setAmount("");
-  }
+  if (!amount || Number(amount) <= 0) return;
 
+  onSubmit(Number(amount));
+  setAmount("");
+}
   return (
     <div className="space-y-5">
 
-      <h2 className="text-2xl font-bold">
+      <h2 className="text-xl font-bold sm:text-2xl">
         Comprar participaciones
       </h2>
 
@@ -35,18 +36,19 @@ export default function ContributionModal({
         </label>
 
         <input
-          type="number"
-          placeholder="1000"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3"
-        />
+  type="number"
+  inputMode="decimal"
+  placeholder="1000"
+  value={amount}
+  onChange={(e) => setAmount(e.target.value)}
+  className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500"
+/>
 
       </div>
 
-      <div className="rounded-2xl bg-slate-50 p-4">
+      <div className="rounded-2xl bg-slate-50 p-4 sm:p-5">
 
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between gap-4">
 
           <span className="text-slate-500">
             Precio actual
@@ -58,7 +60,7 @@ export default function ContributionModal({
 
         </div>
 
-        <div className="mt-3 flex justify-between">
+        <div className="mt-3 flex items-center justify-between gap-4">
 
           <span className="text-slate-500">
             Participaciones

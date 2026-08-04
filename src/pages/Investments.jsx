@@ -109,8 +109,16 @@ export default function Investments() {
     setInvestmentToContribute(null);
   }
 
-  console.log(investments);
-  
+  function handleOpenNewInvestment() {
+  setEditingInvestment(null);
+  setOpen(true);
+}
+
+function handleCloseInvestmentModal() {
+  setEditingInvestment(null);
+  setOpen(false);
+}
+
   return (
     <div className="space-y-8">
       <PageHeader
@@ -119,10 +127,7 @@ export default function Investments() {
         action={
           <PrimaryButton
             icon={Plus}
-            onClick={() => {
-              setEditingInvestment(null);
-              setOpen(true);
-            }}
+            onClick={handleOpenNewInvestment}
           >
             Nueva inversión
           </PrimaryButton>
@@ -131,13 +136,12 @@ export default function Investments() {
 
       {investments.length === 0 ? (
         <EmptyState
-          icon={Landmark}
-          title="Todavía no tienes inversiones"
-          description="Empieza registrando tu primera inversión."
-          buttonText="Nueva inversión"
-        />
+  icon={Landmark}
+  title="Todavía no tienes inversiones"
+  description="Empieza registrando tu primera inversión."
+/>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {investments.map((investment) => (
             <InvestmentCard
               key={investment.id}
@@ -155,10 +159,7 @@ export default function Investments() {
 
       <Modal
         open={open}
-        onClose={() => {
-          setEditingInvestment(null);
-          setOpen(false);
-        }}
+        onClose={handleCloseInvestmentModal}
       >
         <InvestmentForm
           investment={editingInvestment}

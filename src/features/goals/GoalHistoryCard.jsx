@@ -1,8 +1,8 @@
 export default function GoalHistoryCard({ goal }) {
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6">
 
-      <h3 className="mb-5 text-lg font-semibold">
+      <h3 className="mb-4 text-lg font-semibold sm:mb-5">
         Historial
       </h3>
 
@@ -25,7 +25,7 @@ export default function GoalHistoryCard({ goal }) {
 
               <div
                 key={movement.id}
-                className="flex items-center justify-between rounded-xl bg-slate-50 p-3"
+                className="flex flex-col gap-2 rounded-xl bg-slate-50 p-3 sm:flex-row sm:items-center sm:justify-between"
               >
 
                 <div>
@@ -42,7 +42,7 @@ export default function GoalHistoryCard({ goal }) {
 
                 </div>
 
-                <p className="font-semibold">
+                <p className="text-right font-semibold sm:text-left">
                   +{movement.amount.toLocaleString("es-ES")} €
                 </p>
 

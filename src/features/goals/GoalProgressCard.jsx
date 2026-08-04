@@ -4,17 +4,17 @@ export default function GoalProgressCard({
   onContribution,
 }) {
   return (
-    <div className="col-span-2 rounded-3xl bg-white p-8 shadow-sm">
+    <div className="rounded-3xl bg-white p-5 shadow-sm sm:p-6 lg:p-8 xl:col-span-2">
 
-      <h2 className="text-2xl font-bold">
+      <h2 className="text-xl font-bold sm:text-2xl">
         Progreso del objetivo
       </h2>
 
-      <div className="mt-10 flex h-80 items-center justify-center">
+      <div className="mt-8 flex items-center justify-center sm:mt-10 sm:h-80">
 
         <div className="text-center">
 
-          <div className="mx-auto flex h-64 w-28 items-end overflow-hidden rounded-full border-4 border-slate-300 bg-slate-100">
+          <div className="mx-auto flex h-52 w-24 items-end overflow-hidden rounded-full border-4 border-slate-300 bg-slate-100 sm:h-64 sm:w-28">
 
             <div
               className={`w-full transition-all duration-700 ${
@@ -31,7 +31,7 @@ export default function GoalProgressCard({
 
           <div className="mt-6 text-center">
 
-            <p className="text-3xl font-bold">
+            <p className="text-2xl font-bold sm:text-3xl">
               {Math.round(progress)}%
             </p>
 
@@ -40,9 +40,9 @@ export default function GoalProgressCard({
             </p>
 
             <button
-              onClick={onContribution}
-              className="mt-8 rounded-xl bg-orange-500 px-6 py-3 font-medium text-white transition hover:bg-orange-600"
-            >
+  onClick={onContribution}
+  className="mt-6 w-full rounded-xl bg-orange-500 px-6 py-3 font-medium text-white transition-colors hover:bg-orange-600 sm:mt-8 sm:w-auto"
+>
               + Nueva aportación
             </button>
 

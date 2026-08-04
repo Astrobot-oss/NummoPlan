@@ -86,7 +86,7 @@ export default function Goals() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       <PageHeader
         title="Objetivos"
         description="Organiza tus metas financieras y sigue su progreso."
@@ -108,7 +108,7 @@ export default function Goals() {
           buttonText="Nuevo objetivo"
         />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 lg:space-y-5">
           {goals.map((goal) => (
             <GoalCard
               key={goal.id}
