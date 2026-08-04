@@ -12,11 +12,11 @@ export default function ActionMenu({ items }) {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("pointerdown", handleClickOutside);
 
     return () =>
       document.removeEventListener(
-        "mousedown",
+        "pointerdown",
         handleClickOutside
       );
   }, []);
@@ -31,13 +31,13 @@ export default function ActionMenu({ items }) {
     e.stopPropagation();
     setOpen(!open);
   }}
-  className="cursor-pointer rounded-xl p-2 transition hover:bg-slate-100"
+  className="cursor-pointer rounded-xl p-3 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
 >
         <MoreVertical size={20} />
       </button>
 
       {open && (
-        <div className="absolute right-0 z-20 mt-2 w-44 rounded-2xl border border-slate-200 bg-white py-2 shadow-lg">
+        <div className="absolute right-0 z-20 mt-2 w-48 sm:w-44 rounded-2xl border border-slate-200 bg-white py-2 shadow-lg">
 
           {items.map((item) => (
             <button
@@ -47,7 +47,7 @@ export default function ActionMenu({ items }) {
   setOpen(false);
   item.onClick();
 }}
-              className={`block w-full cursor-pointer px-4 py-2 text-left text-sm transition hover:bg-slate-50 ${
+              className={`block w-full cursor-pointer px-4 py-3 text-left text-sm transition hover:bg-slate-50 ${
   item.danger
     ? "text-red-600"
     : "text-slate-700"

@@ -1,90 +1,113 @@
 # 🛣 RoadMap
 
-## Módulos principales
+El desarrollo de NummoPlan se organiza por fases.
 
-### Objetivos
+---
+
+# Fase 1 · Núcleo financiero
+
+## 🎯 Objetivos
 
 - [x] CRUD
 - [x] Detalle
 - [x] Historial
 - [x] Barra de progreso
 - [x] Menú contextual
+- [x] Persistencia LocalStorage
 
 ---
 
-### Patrimonio
+## 💼 Patrimonio
 
 - [x] CRUD
 - [x] Compra inicial
 - [x] Compra posterior
+- [x] Venta de participaciones
+- [x] Registro de dividendos
 - [x] Precio medio automático
 - [x] Actualización de valor
-- [x] Histórico
-- [x] Gráfica
-- [x] Detalle
+- [x] Histórico de movimientos
+- [x] Histórico de precios
+- [x] Gráfica individual
+- [x] Detalle completo
+- [x] Persistencia LocalStorage
 
 ---
 
-### Deudas
+# Fase 2 · Responsive
+
+## 📱 Adaptación móvil
+
+- [ ] Sidebar responsive
+- [ ] Dashboard responsive
+- [ ] Patrimonio responsive
+- [ ] Objetivos responsive
+- [ ] Deudas responsive
+- [ ] Inmuebles responsive
+- [ ] Formularios responsive
+- [ ] Modales responsive
+- [ ] Navegación móvil
+- [ ] Optimización tablets
+
+---
+
+# Fase 3 · Módulos financieros
+
+## 💳 Deudas
 
 - [x] Context
 - [x] Service
 - [x] Calculations
 - [x] DebtForm
-- [x] Debts.jsx
+- [x] Debts
 - [x] DebtCard
 - [ ] PaymentModal
 - [ ] DebtDetail
 - [ ] SummaryCard
 - [ ] InfoCard
 - [ ] HistoryCard
+- [ ] Persistencia LocalStorage
 
 ---
 
-### Presupuestos
+## 🏠 Inmuebles
 
 - [ ] Context
 - [ ] CRUD
-- [ ] Detail
+- [ ] Detalle
+- [ ] Rentabilidad
+- [ ] Histórico
 
 ---
 
-### Gastos fijos
+## 💶 Ingresos y gastos
 
 - [ ] Context
 - [ ] CRUD
-- [ ] Detail
+- [ ] Categorías
+- [ ] Histórico
+- [ ] Estadísticas
 
 ---
 
-### Dashboard
+# Fase 4 · Dashboard inteligente
 
-- [ ] Resumen financiero
-- [ ] Patrimonio
+- [ ] Patrimonio neto
+- [ ] Distribución patrimonial
 - [ ] Objetivos
 - [ ] Deudas
-- [ ] Presupuestos
-- [ ] Gastos
+- [ ] Inmuebles
+- [ ] Balance mensual
+- [ ] Evolución financiera
 - [ ] Alertas
 
 ---
 
-## Fase final
+# Fase 5 · Funcionalidades avanzadas
 
-- [ ] Mejoras visuales
-- [ ] Animaciones
-- [ ] Responsive completo
+- [ ] Simulador FIRE
+- [ ] Simulador de jubilación
+- [ ] Proyección patrimonial
 - [ ] Exportación
 - [ ] Configuración
-
-# Decisiones
-
-## Patrimonio
-
-- Las inversiones se modelan mediante movimientos (buy, sell, dividend).
-- El precio actual es independiente del precio medio de compra.
-- El detalle de inversión centraliza las operaciones principales.
-
-## Persistencia
-
-Pendiente de migrar todos los Context a localStorage mediante un helper común.
+- [ ] Sincronización en la nube

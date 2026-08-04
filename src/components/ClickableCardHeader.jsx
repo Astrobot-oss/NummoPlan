@@ -9,7 +9,7 @@ export default function ClickableCardHeader({
   return (
     <div
       onClick={() => navigate(to)}
-      className="group cursor-pointer rounded-2xl p-3 transition hover:bg-slate-50"
+      className="group cursor-pointer rounded-2xl p-3 transition-colors hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
     >
       <div className="flex items-start justify-between">
         {children}

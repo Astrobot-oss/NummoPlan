@@ -12,7 +12,7 @@ import { netWorthData } from "../data/netWorthData";
 
 export default function ChartCard() {
   return (
-    <div className="mt-6 rounded-3xl border border-slate-100 bg-white p-5 shadow-sm md:mt-8 md:p-8">
+    <div className="mt-6 rounded-3xl border border-slate-100 bg-white p-4 shadow-sm sm:p-6 lg:mt-8 lg:p-8">
 
       <h2 className="text-lg font-semibold md:text-xl">
         Evolución del patrimonio
@@ -22,7 +22,7 @@ export default function ChartCard() {
         Resumen anual
       </p>
 
-      <div className="h-64 md:h-80">
+      <div className="h-72 sm:h-80">
 
         <ResponsiveContainer width="100%" height="100%">
 
@@ -68,17 +68,23 @@ export default function ChartCard() {
             />
 
             <XAxis
-              dataKey="month"
-              tickMargin={8}
-              tick={{ fontSize: 12 }}
-            />
+  dataKey="month"
+  tickMargin={8}
+  minTickGap={20}
+  tick={{ fontSize: 11 }}
+/>
 
             <YAxis
               width={45}
               tick={{ fontSize: 12 }}
             />
 
-            <Tooltip />
+            <Tooltip
+  contentStyle={{
+    borderRadius: "12px",
+    border: "1px solid #e2e8f0",
+  }}
+/>
 
             <Area
               type="monotone"

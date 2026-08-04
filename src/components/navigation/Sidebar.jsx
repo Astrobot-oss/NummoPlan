@@ -26,19 +26,14 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`border-r border-slate-200 bg-white transition-all duration-300 ${
+      className={`hidden lg:flex lg:flex-col border-r border-slate-200 bg-white transition-all duration-300 ${
         collapsed ? "w-20" : "w-64"
       }`}
     >
       <div className="flex items-center justify-between px-6 py-6">
-
         {!collapsed && (
           <div className="flex items-center gap-3">
-            <PiggyBank
-              className="text-orange-500"
-              size={30}
-            />
-
+            <PiggyBank size={30} className="text-orange-500" />
             <h1 className="text-2xl font-bold text-orange-500">
               NummoPlan
             </h1>
@@ -46,22 +41,14 @@ export default function Sidebar() {
         )}
 
         <button
-          onClick={() =>
-            setCollapsed(!collapsed)
-          }
+          onClick={() => setCollapsed(!collapsed)}
           className="rounded-lg p-2 transition hover:bg-slate-100"
         >
-          {collapsed ? (
-            <Menu size={20} />
-          ) : (
-            <ChevronLeft size={20} />
-          )}
+          {collapsed ? <Menu size={20} /> : <ChevronLeft size={20} />}
         </button>
-
       </div>
 
       <nav className="flex flex-col gap-2 px-3">
-
         {menu.map((item) => (
           <NavLink
             key={item.label}
@@ -75,13 +62,9 @@ export default function Sidebar() {
             }
           >
             <item.icon size={20} />
-
-            {!collapsed && (
-              <span>{item.label}</span>
-            )}
+            {!collapsed && <span>{item.label}</span>}
           </NavLink>
         ))}
-
       </nav>
     </aside>
   );

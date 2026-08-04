@@ -13,7 +13,7 @@ export default function ConfirmModal({
       <div className="space-y-6">
 
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
             {title}
           </h2>
 
@@ -22,16 +22,19 @@ export default function ConfirmModal({
           </p>
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
 
           <button
-            onClick={onClose}
-            className="rounded-xl border border-slate-300 px-5 py-3 hover:bg-slate-100"
-          >
+  onClick={onClose}
+  className="w-full rounded-xl border border-slate-300 px-5 py-3 transition-colors hover:bg-slate-100 sm:w-auto"
+>
             Cancelar
           </button>
 
-          <PrimaryButton onClick={onConfirm}>
+          <PrimaryButton
+  onClick={onConfirm}
+  className="sm:w-auto"
+>
             Eliminar
           </PrimaryButton>
 

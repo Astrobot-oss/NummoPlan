@@ -1,6 +1,3 @@
-import { Plus } from "lucide-react";
-import PrimaryButton from "./PrimaryButton";
-
 export default function EmptyState({
   icon,
   title,
@@ -10,17 +7,17 @@ export default function EmptyState({
   const Icon = icon;
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-200 p-12 text-center">
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8 lg:p-12">
 
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-orange-100">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-100 sm:h-16 sm:w-16">
         <Icon className="h-8 w-8 text-orange-600" />
       </div>
 
-      <h2 className="mt-6 text-2xl font-semibold text-slate-900">
+      <h2 className="mt-5 text-xl font-semibold text-slate-900 sm:mt-6 sm:text-2xl">
         {title}
       </h2>
 
-      <p className="mt-3 text-slate-500 max-w-md mx-auto leading-7">
+      <p className="mx-auto mt-3 max-w-md leading-6 text-slate-500 sm:leading-7">
         {description}
       </p>
 
