@@ -12,6 +12,7 @@ import InvestmentDetail from "./pages/InvestmentDetail";
 import { InvestmentProvider } from "./context/InvestmentContext";
 import GoalDetail from "./pages/GoalDetail";
 import DebtDetail from "./pages/DebtDetail";
+import Balance from "./pages/Balance";
 
 function App() {
  return (
@@ -19,6 +20,10 @@ function App() {
     <MainLayout>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route
+  path="/balance"
+  element={<Balance />}
+/>
         <Route path="/objetivos" element={<Goals />} />
         <Route path="/inversiones" element={<Investments />} />
         <Route path="/inversiones/:id" element={<InvestmentDetail />} />
@@ -33,7 +38,7 @@ function App() {
           path="/deudas/:id"
           element={<DebtDetail />}
         />
-      </Routes>
+</Routes>
     </MainLayout>
   </InvestmentProvider>
 );

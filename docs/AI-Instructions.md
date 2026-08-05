@@ -4,10 +4,10 @@ Este documento describe la forma de trabajar durante el desarrollo de **NummoPla
 
 Debe utilizarse junto con:
 
-- README.md
-- ProjectStatus.md
-- RoadMap.md
-- Decisions.md
+* README.md
+* ProjectStatus.md
+* RoadMap.md
+* Decisions.md
 
 Si existe alguna contradicción entre documentos, prevalecerá el contenido de **Decisions.md**.
 
@@ -19,11 +19,30 @@ NummoPlan es una aplicación de planificación financiera personal cuyo objetivo
 
 El proyecto prioriza:
 
-- código limpio
-- arquitectura escalable
-- reutilización
-- simplicidad de uso
-- compatibilidad móvil
+* código limpio
+* arquitectura escalable
+* reutilización
+* simplicidad de uso
+* compatibilidad móvil
+
+NummoPlan **no debe comportarse como una aplicación bancaria**. El objetivo es ayudar al usuario a comprender, planificar y mejorar su situación financiera mediante análisis, proyecciones y recomendaciones útiles.
+
+---
+
+# Filosofía del producto
+
+La aplicación debe responder preguntas reales como:
+
+* ¿Cuánto dinero necesito realmente para vivir?
+* ¿Qué gastos podría eliminar sin afectar a mi calidad de vida?
+* ¿Cuánto podría invertir cada mes?
+* ¿Qué porcentaje de mis ingresos ya está comprometido?
+* ¿Cuánto dinero pierdo en suscripciones?
+* ¿Qué categoría está creciendo demasiado rápido?
+* ¿Cuánto gasto en necesidades frente a caprichos?
+* ¿Qué decisiones están frenando más mi patrimonio?
+
+Cada módulo debe aportar **información accionable**, no solo almacenar datos.
 
 ---
 
@@ -35,8 +54,8 @@ Por tanto, todas las explicaciones deben asumir ese contexto.
 
 Nunca se debe responder con instrucciones ambiguas como:
 
-- "añade esto"
-- "cambia aquello"
+* “añade esto”
+* “cambia aquello”
 
 Siempre debe indicarse exactamente dónde realizar cada modificación.
 
@@ -64,11 +83,11 @@ src/features/investments/InvestmentDetail.jsx
 
 Ejemplos
 
-- Busca este bloque.
-- Justo debajo pega esto.
-- Sustituye este código.
-- Elimina este bloque.
-- Añade este import al principio.
+* Busca este bloque.
+* Justo debajo pega esto.
+* Sustituye este código.
+* Elimina este bloque.
+* Añade este import al principio.
 
 Nunca asumir que el usuario sabe dónde pegar el código.
 
@@ -106,12 +125,12 @@ No mover lógica a componentes salvo petición expresa.
 
 Cada módulo seguirá, siempre que sea necesario, esta estructura:
 
-- Form
-- Card
-- Detail
-- SummaryCard
-- InfoCard
-- HistoryCard
+* Form
+* Card
+* Detail
+* SummaryCard
+* InfoCard
+* HistoryCard
 
 ---
 
@@ -121,12 +140,12 @@ Antes de crear un componente nuevo comprobar siempre si ya existe uno reutilizab
 
 Priorizar el uso de:
 
-- Modal
-- PrimaryButton
-- PageHeader
-- EmptyState
-- ActionMenu
-- ClickableCardHeader
+* Modal
+* PrimaryButton
+* PageHeader
+* EmptyState
+* ActionMenu
+* ClickableCardHeader
 
 Evitar duplicar componentes.
 
@@ -142,10 +161,11 @@ Todos los cálculos deben vivir dentro de:
 src/domain
 ```
 
-Ejemplos
+Ejemplos:
 
-- investmentCalculations
-- debtCalculations
+* investmentCalculations
+* debtCalculations
+* balanceCalculations
 
 ---
 
@@ -153,16 +173,17 @@ Ejemplos
 
 Cada módulo tendrá un único Service responsable de:
 
-- crear
-- actualizar
-- eliminar
-- registrar movimientos
+* crear
+* actualizar
+* eliminar
+* registrar movimientos
 
-Ejemplos
+Ejemplos:
 
-- goalService
-- investmentService
-- debtService
+* goalService
+* investmentService
+* debtService
+* balanceService
 
 ---
 
@@ -178,9 +199,13 @@ No contienen lógica de negocio.
 
 # Persistencia
 
-Actualmente la aplicación utiliza LocalStorage.
+Actualmente la aplicación utiliza LocalStorage mediante las utilidades comunes:
 
-Los nuevos módulos deberán seguir el mismo sistema mientras no exista sincronización en la nube.
+```
+src/utils/storage.js
+```
+
+Los nuevos módulos deberán usar siempre `loadData` y `saveData` en lugar de acceder directamente a `localStorage`.
 
 ---
 
@@ -190,11 +215,26 @@ La prioridad actual del proyecto es adaptar completamente la aplicación para m�
 
 Todas las nuevas funcionalidades deben diseñarse pensando primero en:
 
-- móvil
-- tablet
-- escritorio
+* móvil
+* tablet
+* escritorio
 
 Evitar rehacer componentes posteriormente.
+
+---
+
+# Estados vacíos
+
+Todos los módulos deben mantener una experiencia coherente cuando no existan datos.
+
+Un estado vacío debe incluir:
+
+* icono representativo
+* título claro
+* descripción breve
+* un único CTA principal
+
+No mostrar paneles vacíos ni tablas sin contenido.
 
 ---
 
@@ -206,11 +246,95 @@ No contendrá lógica propia.
 
 Únicamente consumirá información de:
 
-- Objetivos
-- Patrimonio
-- Deudas
-- Inmuebles
-- Ingresos y gastos
+* Objetivos
+* Patrimonio
+* Deudas
+* Inmuebles
+* Balance
+
+El Dashboard actuará como un resumen inteligente del resto de módulos.
+
+---
+
+# Módulo Balance
+
+Balance es el **centro financiero** de NummoPlan.
+
+No debe entenderse como una simple sección de ingresos y gastos.
+
+## Estructura prevista
+
+1. Resumen del mes
+2. Ingresos recurrentes
+3. Registrar movimiento
+4. Historial de movimientos
+5. Gráficos
+6. Análisis inteligentes
+
+## Ingresos recurrentes
+
+El concepto “salario” se sustituye por **ingresos recurrentes**, permitiendo registrar:
+
+* nómina
+* pensión
+* alquiler recibido
+* negocio
+* prestación
+* beca
+* cualquier ingreso periódico
+
+Modelo base:
+
+```js
+recurringIncome: [
+  {
+    id,
+    name,
+    amount,
+    frequency,
+    payDay,
+    active,
+  },
+];
+```
+
+## Integraciones futuras
+
+Los movimientos creados en:
+
+* Patrimonio
+* Deudas
+* Objetivos
+* Inmuebles
+
+deberán repercutir automáticamente en Balance.
+
+## Análisis inteligentes
+
+Balance deberá generar recomendaciones progresivas.
+
+### Nivel 1
+
+Comparativas simples.
+
+### Nivel 2
+
+Tendencias por categorías.
+
+### Nivel 3
+
+Recomendaciones financieras.
+
+### Nivel 4
+
+Análisis global combinando todos los módulos.
+
+Ejemplos:
+
+* “Este mes has ahorrado un 12 % más.”
+* “El 41 % de tus ingresos ya está comprometido.”
+* “Podrías invertir 320 € al mes.”
+* “La alimentación ha aumentado un 18 %.”
 
 ---
 
@@ -233,10 +357,10 @@ Nunca sacrificar arquitectura por rapidez.
 
 El asistente puede proponer:
 
-- mejoras de arquitectura
-- mejoras de rendimiento
-- mejoras de UX
-- simplificaciones
+* mejoras de arquitectura
+* mejoras de rendimiento
+* mejoras de UX
+* simplificaciones
 
 Pero no debe implementarlas directamente sin explicarlas primero.
 
@@ -246,10 +370,10 @@ Pero no debe implementarlas directamente sin explicarlas primero.
 
 Cuando se complete una fase importante del proyecto, recordar actualizar:
 
-- README.md
-- ProjectStatus.md
-- RoadMap.md
-- Decisions.md
+* README.md
+* ProjectStatus.md
+* RoadMap.md
+* Decisions.md
 
 ---
 
@@ -259,10 +383,10 @@ Las respuestas deben ser claras.
 
 Siempre indicar:
 
-- archivo
-- lugar exacto
-- código a sustituir
-- código nuevo
+* archivo
+* lugar exacto
+* código a sustituir
+* código nuevo
 
 Si un cambio afecta a varios archivos, enumerarlos primero.
 
@@ -271,3 +395,5 @@ Si un cambio afecta a varios archivos, enumerarlos primero.
 # Objetivo del desarrollo
 
 Construir una aplicación profesional, mantenible y escalable que pueda seguir creciendo durante años sin necesidad de rehacer su arquitectura.
+
+Cada decisión técnica debe evaluarse pensando en la evolución del proyecto a largo plazo y en ofrecer al usuario una herramienta de planificación financiera significativamente más útil que un simple registro bancario.

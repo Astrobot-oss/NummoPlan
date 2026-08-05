@@ -8,13 +8,14 @@ Estado actualizado del proyecto NummoPlan.
 
 | Módulo | Estado |
 |---------|--------|
-| 🎯 Objetivos | ✅ Finalizado |
-| 💼 Patrimonio | ✅ Finalizado |
-| 📱 Responsive | 🚧 En desarrollo |
-| 💳 Deudas | 🚧 En desarrollo |
+| 🎯 Objetivos | ✅ Funcional |
+| 💼 Patrimonio | ✅ Funcional |
+| 💳 Deudas | ✅ Funcional |
+| ⚖️ Balance | 🚧 En desarrollo |
 | 🏠 Inmuebles | ⏳ Pendiente |
-| 💶 Ingresos y gastos | ⏳ Pendiente |
+| 📱 Responsive | 🚧 En desarrollo |
 | 📊 Dashboard | ⏳ Pendiente |
+| ⚙️ Ajustes | ⏳ Pendiente |
 
 ---
 
@@ -22,18 +23,24 @@ Estado actualizado del proyecto NummoPlan.
 
 Estado:
 
-✅ Finalizado
+✅ Funcional
 
 Incluye:
 
 - CRUD completo
 - Página detalle
-- Historial
-- Aportaciones
+- Historial de aportaciones
 - Barra de progreso
-- ActionMenu
+- SummaryCard
+- InfoCard
+- HistoryCard
 - Persistencia mediante LocalStorage
 - Arquitectura modular
+
+Pendiente:
+
+- Adaptación responsive completa
+- Integración con Dashboard
 
 ---
 
@@ -41,17 +48,17 @@ Incluye:
 
 Estado:
 
-✅ Finalizado
+✅ Funcional
 
 Incluye:
 
-- CRUD
+- CRUD completo
 - Compra inicial
 - Compras posteriores
 - Venta de participaciones
 - Registro de dividendos
-- Precio medio automático
 - Actualización del valor de mercado
+- Precio medio automático
 - Histórico de movimientos
 - Histórico de precios
 - Gráfica individual
@@ -60,6 +67,98 @@ Incluye:
 - InfoCard
 - HistoryCard
 - Persistencia mediante LocalStorage
+
+Pendiente:
+
+- Adaptación responsive completa
+- Integración automática con Balance
+- Integración con Dashboard
+
+---
+
+# 💳 Deudas
+
+Estado:
+
+✅ Funcional
+
+Incluye:
+
+- CRUD completo
+- Registro de pagos
+- Barra de progreso
+- Indicador de deuda liquidada
+- Página detalle
+- SummaryCard
+- InfoCard
+- HistoryCard
+- DebtProgressGauge
+- Persistencia mediante LocalStorage
+- Responsive mejorado
+
+Pendiente:
+
+- Integración automática con Balance
+- Adaptación responsive final
+- Integración con Dashboard
+
+---
+
+# ⚖️ Balance
+
+Estado:
+
+🚧 En desarrollo
+
+Completado:
+
+- Arquitectura del módulo
+- BalanceContext
+- balanceService
+- balanceCalculations
+- Persistencia mediante LocalStorage
+- Modelo de datos inicial
+- Estructura preparada para ingresos recurrentes
+
+En desarrollo:
+
+- Página principal
+- Registro manual de ingresos
+- Registro manual de gastos
+- Categorías
+- Ingresos recurrentes
+- Tarjetas resumen
+
+Pendiente:
+
+- Estadísticas inteligentes
+- Comparativas mensuales
+- Gráfico circular de gastos
+- Evolución del ahorro
+- Integración automática con Patrimonio
+- Integración automática con Deudas
+- Integración automática con Inmuebles
+- Reglas automáticas de movimientos
+- Dashboard
+
+---
+
+# 🏠 Inmuebles
+
+Estado:
+
+⏳ Pendiente
+
+Planificado:
+
+- CRUD completo
+- Valor de mercado
+- Hipoteca asociada
+- Gastos asociados
+- Rentabilidad
+- Histórico de valor
+- Integración con Balance
+- Integración con Dashboard
 
 ---
 
@@ -71,63 +170,22 @@ Estado:
 
 Completado:
 
-- Base responsive de la aplicación
 - MainLayout adaptable
 - Sidebar adaptable
-- PageHeader adaptable
-- Botones reutilizables adaptables
 - Modal adaptable
-- Inicio de adaptación del módulo Patrimonio
+- PrimaryButton adaptable
+- PageHeader adaptable
+- Gran parte del módulo Patrimonio
+- Gran parte del módulo Deudas
 
 Pendiente:
 
 - Objetivos
-- Deudas
+- Balance
 - Inmuebles
 - Dashboard
-- Optimización tablets
-
----
-
-# 💳 Deudas
-
-Estado:
-
-🚧 En desarrollo
-
-Completado:
-
-- DebtContext
-- debtService
-- debtCalculations
-- DebtForm
-- Debts.jsx
-- DebtCard
-
-Pendiente:
-
-- PaymentModal
-- DebtDetail
-- DebtSummaryCard
-- DebtInfoCard
-- DebtHistoryCard
-- Persistencia mediante LocalStorage
-
----
-
-# 🏠 Inmuebles
-
-Estado:
-
-⏳ Pendiente
-
----
-
-# 💶 Ingresos y gastos
-
-Estado:
-
-⏳ Pendiente
+- Ajustes
+- Optimización para tablets
 
 ---
 
@@ -137,77 +195,104 @@ Estado:
 
 ⏳ Pendiente
 
-Se desarrollará únicamente cuando todos los módulos financieros estén terminados.
+El Dashboard se desarrollará cuando todos los módulos estén terminados.
 
 Consumirá información de:
 
 - Objetivos
 - Patrimonio
 - Deudas
+- Balance
 - Inmuebles
-- Ingresos y gastos
 
 No contendrá lógica de negocio propia.
+
+Mostrará únicamente información agregada y análisis.
 
 ---
 
 # Arquitectura
 
-Actualmente todos los módulos siguen la misma estructura:
+Todos los módulos siguen la misma estructura:
 
 ```
 Context
-
-↓
-
+      ↓
 Service
-
-↓
-
+      ↓
 Calculations
-
-↓
-
-Cards
-
-↓
-
+      ↓
+Components
+      ↓
 Detail
-
-↓
-
+      ↓
 Page
 ```
 
-Esta estructura facilita:
+Esto garantiza:
 
-- reutilización
-- escalabilidad
-- mantenimiento
-- separación entre lógica y presentación
+- Separación entre lógica y presentación
+- Escalabilidad
+- Reutilización
+- Facilidad de mantenimiento
+
+---
+
+# Persistencia
+
+Actualmente utilizan LocalStorage:
+
+- Objetivos
+- Patrimonio
+- Deudas
+- Balance
+
+Todos los módulos futuros seguirán el mismo sistema hasta la incorporación de sincronización en la nube.
 
 ---
 
 # Próximo objetivo
 
-La prioridad actual del proyecto es:
+Orden de desarrollo actual:
 
-1. Finalizar la compatibilidad móvil.
-2. Completar el módulo Deudas.
+1. Completar Balance.
+2. Finalizar Responsive.
 3. Desarrollar Inmuebles.
-4. Desarrollar Ingresos y gastos.
-5. Construir el Dashboard inteligente.
+4. Construir Dashboard inteligente.
+5. Completar Ajustes.
+6. Interconectar todos los módulos automáticamente.
+
+---
+
+# Visión del producto
+
+NummoPlan no pretende ser únicamente un registro de movimientos.
+
+El objetivo es convertirse en un asistente financiero que ayude al usuario a comprender cómo afectan sus decisiones a su patrimonio.
+
+Para ello se desarrollarán análisis como:
+
+- Capacidad real de ahorro.
+- Dinero disponible para invertir.
+- Gastos que más crecen.
+- Comparativas mensuales.
+- Gastos prescindibles.
+- Dependencia del salario.
+- Proyección de independencia financiera.
+- Impacto de cada decisión económica sobre el patrimonio futuro.
 
 ---
 
 # Estado del MVP
 
-Actualmente NummoPlan ya dispone de:
+Actualmente NummoPlan dispone de:
 
+- Arquitectura consolidada.
+- Componentes reutilizables.
+- Persistencia local.
 - Objetivos funcionales.
-- Patrimonio completamente funcional.
-- Persistencia de datos.
-- Arquitectura estable.
-- Sistema de componentes reutilizables.
+- Patrimonio funcional.
+- Deudas funcionales.
+- Inicio del módulo Balance.
 
-A partir de este punto el desarrollo se centra en ampliar funcionalidades manteniendo la misma arquitectura.
+La siguiente gran fase consiste en convertir los distintos módulos en un único ecosistema financiero totalmente interconectado.

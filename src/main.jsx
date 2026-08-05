@@ -8,6 +8,7 @@ import App from "./App";
 import { InvestmentProvider } from "./context/InvestmentContext";
 import { GoalProvider } from "./context/GoalContext";
 import { DebtProvider } from "./context/DebtsContext";
+import { BalanceProvider } from "./context/BalanceContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,7 +16,11 @@ createRoot(document.getElementById("root")).render(
       <InvestmentProvider>
         <GoalProvider>
           <DebtProvider>
-            <App />
+            <BalanceProvider>
+
+        <App />
+
+            </BalanceProvider>
           </DebtProvider>
         </GoalProvider>
       </InvestmentProvider>

@@ -1,8 +1,16 @@
 # 🐷 NummoPlan
 
-NummoPlan es una aplicación de planificación financiera personal desarrollada con React + Vite cuyo objetivo es centralizar toda la información económica del usuario en un único lugar.
+NummoPlan es una aplicación de planificación financiera personal desarrollada con React + Vite cuyo objetivo es ayudar al usuario a comprender, organizar y mejorar su situación financiera desde un único lugar.
 
-La aplicación está diseñada para ofrecer una visión completa del patrimonio, las obligaciones financieras y la evolución económica del usuario mediante una interfaz moderna, sencilla y escalable.
+Más que registrar movimientos como hace una aplicación bancaria, NummoPlan pretende convertirse en un asistente financiero capaz de responder preguntas como:
+
+- ¿En qué se está yendo mi dinero?
+- ¿Cuánto puedo invertir cada mes?
+- ¿Qué gastos están creciendo demasiado?
+- ¿Cuánto dinero necesito realmente para vivir?
+- ¿Qué decisiones frenan mi patrimonio?
+
+La filosofía del proyecto es transformar datos financieros en información útil para tomar mejores decisiones.
 
 ---
 
@@ -45,25 +53,94 @@ Actualmente permite gestionar inversiones de forma completa:
 
 ## 🚧 Deudas
 
-En desarrollo.
+Actualmente incluye:
+
+- CRUD completo.
+- Registro de pagos.
+- Historial de pagos.
+- Página de detalle.
+- Indicadores de progreso.
+- Persistencia mediante LocalStorage.
+
+Continúa mejorándose visualmente y adaptándose completamente a dispositivos móviles.
 
 ---
 
-## 🚧 Inmuebles
+## 🚧 Balance (Ingresos y gastos)
+
+Nuevo módulo en desarrollo cuyo objetivo no es actuar como un extracto bancario, sino como el centro de control financiero del usuario.
+
+Permitirá:
+
+### Ingresos recurrentes
+
+- Salario.
+- Día habitual de cobro.
+- Pagas extraordinarias configurables.
+- Otros ingresos periódicos.
+
+### Movimientos
+
+Registro manual de:
+
+- ingresos
+- gastos
+- transferencias futuras entre módulos
+
+Cada movimiento podrá clasificarse mediante categorías y etiquetas.
+
+### Inteligencia financiera
+
+El sistema calculará automáticamente:
+
+- ahorro mensual
+- tasa de ahorro
+- dinero disponible para invertir
+- porcentaje del salario comprometido
+- evolución mensual
+- comparación con meses anteriores
+
+### Análisis
+
+Se incorporarán:
+
+- gráficos circulares de gastos
+- evolución temporal
+- distribución por categorías
+- tendencias
+
+### Insights
+
+NummoPlan ofrecerá recomendaciones automáticas como:
+
+- "Este mes has ahorrado un 12 % más."
+- "Tus gastos en ocio han aumentado un 35 %."
+- "Podrías invertir aproximadamente 320 € al mes."
+- "Las suscripciones representan el 9 % de tus gastos."
+
+---
+
+## ⏳ Inmuebles
 
 Pendiente.
 
 ---
 
-## 🚧 Ingresos y gastos
+## ⏳ Dashboard inteligente
 
-Pendiente.
+Será el último gran módulo.
 
----
+No almacenará datos propios.
 
-## 🚧 Dashboard financiero
+Consumirá información de:
 
-Pendiente hasta completar todos los módulos financieros.
+- Objetivos
+- Patrimonio
+- Deudas
+- Balance
+- Inmuebles
+
+para ofrecer una visión global del patrimonio del usuario.
 
 ---
 
@@ -94,15 +171,16 @@ src
 └── data
 ```
 
-Todos los módulos siguen la misma estructura:
+Cada módulo mantiene la misma estructura:
 
 - Página principal
 - Página detalle
 - Formularios
-- Tarjetas
+- Cards
 - Componentes específicos
-- Servicios
-- Cálculos
+- Context
+- Service
+- Calculations
 
 ---
 
@@ -110,19 +188,33 @@ Todos los módulos siguen la misma estructura:
 
 NummoPlan sigue una arquitectura inspirada en Clean Architecture.
 
-Los componentes únicamente renderizan información.
+- Los componentes únicamente renderizan información.
+- Los Context almacenan el estado.
+- Toda la lógica vive en `src/domain`.
+- Las páginas coordinan la interfaz.
 
-Toda la lógica de negocio vive en:
+El objetivo es mantener un código limpio, reutilizable y preparado para crecer durante años.
 
-```
-src/domain
-```
+---
 
-Los Context únicamente gestionan el estado.
+# Diferenciación respecto a otras aplicaciones
 
-Las páginas orquestan la interfaz.
+NummoPlan no pretende sustituir a un banco.
 
-Esto permite mantener un código escalable y sencillo de mantener.
+Pretende convertirse en un copiloto financiero.
+
+Mientras un banco muestra movimientos, NummoPlan ayuda a comprender qué significan esos movimientos y cómo afectan al patrimonio presente y futuro del usuario.
+
+La aplicación evolucionará hacia un sistema capaz de conectar automáticamente todos los módulos:
+
+- compras de inversiones
+- dividendos
+- pagos de deudas
+- ingresos
+- gastos
+- inmuebles
+
+para generar un análisis financiero unificado.
 
 ---
 
@@ -133,24 +225,21 @@ Actualmente utilizan LocalStorage:
 - Objetivos
 - Patrimonio
 - Deudas
+- Balance
 
-Los siguientes módulos también utilizarán LocalStorage hasta una futura sincronización en la nube.
+Hasta la futura sincronización en la nube.
 
 ---
 
 # Responsive
 
-La aplicación está siendo adaptada progresivamente para funcionar correctamente tanto en escritorio como en dispositivos móviles.
+Toda nueva funcionalidad se desarrolla pensando primero en:
 
-La compatibilidad móvil pasa a ser una prioridad antes de continuar con los siguientes módulos.
+- móvil
+- tablet
+- escritorio
 
-Objetivos del responsive:
-
-- Adaptación completa a móviles.
-- Adaptación a tablets.
-- Componentes reutilizables.
-- Modales adaptativos.
-- Navegación cómoda mediante pantallas táctiles.
+evitando rehacer componentes posteriormente.
 
 ---
 
@@ -173,15 +262,14 @@ Consultar:
 
 ---
 
-# Próximos módulos
+# Futuro de NummoPlan
 
-Una vez completado el responsive se desarrollarán:
+Entre las funcionalidades previstas destacan:
 
-- Deudas
-- Inmuebles
-- Ingresos y gastos
 - Dashboard financiero inteligente
 - Simuladores financieros
 - Herramientas FIRE
+- Comparativas históricas
+- Alertas inteligentes
 - Exportación de datos
 - Sincronización en la nube

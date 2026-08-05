@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { Scale } from "lucide-react";
 import {
   LayoutDashboard,
   Target,
@@ -14,6 +15,7 @@ import {
 
 const menu = [
   { icon: LayoutDashboard, label: "Resumen", path: "/" },
+  { icon: Scale, label: "Balance", path: "/balance" },
   { icon: Target, label: "Objetivos", path: "/objetivos" },
   { icon: TrendingUp, label: "Patrimonio", path: "/inversiones" },
   { icon: CreditCard, label: "Deudas", path: "/deudas" },
