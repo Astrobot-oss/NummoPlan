@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 
+const frequencies = [
+  {
+    value: "monthly",
+    label: "Mensual",
+  },
+];
+
 const months = [
   "Enero",
   "Febrero",
@@ -17,22 +24,35 @@ const months = [
 ];
 
 export default function RecurringIncomeModal({
-  salary,
+  recurringIncome,
   onSubmit,
 }) {
-  const [amount, setAmount] = useState(0);
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
   const [payDay, setPayDay] = useState(1);
-  const [frequency, setFrequency] = useState("monthly");
-  const [extraPayments, setExtraPayments] = useState([]);
+  const [frequency, setFrequency] =
+    useState("monthly");
+  const [extraPayments, setExtraPayments] =
+    useState([]);
 
   useEffect(() => {
-    if (!salary) return;
+    if (!recurringIncome) {
+      setName("");
+      setAmount("");
+      setPayDay(1);
+      setFrequency("monthly");
+      setExtraPayments([]);
+      return;
+    }
 
-    setAmount(salary.amount);
-    setPayDay(salary.payDay);
-    setFrequency(salary.frequency);
-    setExtraPayments(salary.extraPayments);
-  }, [salary]);
+    setName(recurringIncome.name ?? "");
+    setAmount(recurringIncome.amount);
+    setPayDay(recurringIncome.payDay);
+    setFrequency(recurringIncome.frequency);
+    setExtraPayments(
+      recurringIncome.extraPayments ?? []
+    );
+  }, [recurringIncome]);
 
   function toggleExtraPayment(month) {
     if (extraPayments.includes(month)) {
@@ -51,6 +71,8 @@ export default function RecurringIncomeModal({
     e.preventDefault();
 
     onSubmit({
+      id: recurringIncome?.id,
+      name,
       amount: Number(amount),
       payDay: Number(payDay),
       frequency,
@@ -65,12 +87,12 @@ export default function RecurringIncomeModal({
     >
       <div>
 
-        <h2 className="text-xl font-bold sm:text-2xl">
-          Ingresos recurrentes
+        <h2 className="text-2xl font-bold">
+          Ingreso recurrente
         </h2>
 
-        <p className="mt-1 text-slate-500">
-          Configura los ingresos automáticos de cada mes.
+        <p className="text-slate-500">
+          Configura una fuente de ingresos periódica.
         </p>
 
       </div>
@@ -78,15 +100,36 @@ export default function RecurringIncomeModal({
       <div>
 
         <label className="mb-2 block text-sm font-medium">
-          Salario mensual
+          Nombre
+        </label>
+
+        <input
+          type="text"
+          value={name}
+          onChange={(e) =>
+            setName(e.target.value)
+          }
+          placeholder="Ej. Nómina"
+          required
+          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+        />
+
+      </div>
+
+      <div>
+
+        <label className="mb-2 block text-sm font-medium">
+          Importe
         </label>
 
         <input
           type="number"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-xl border border-slate-300 px-4 py-3"
+          onChange={(e) =>
+            setAmount(e.target.value)
+          }
           required
+          className="w-full rounded-xl border border-slate-300 px-4 py-3"
         />
 
       </div>
@@ -99,14 +142,25 @@ export default function RecurringIncomeModal({
             Día de cobro
           </label>
 
-          <input
-            type="number"
-            min="1"
-            max="31"
+          <select
             value={payDay}
-            onChange={(e) => setPayDay(e.target.value)}
+            onChange={(e) =>
+              setPayDay(e.target.value)
+            }
             className="w-full rounded-xl border border-slate-300 px-4 py-3"
-          />
+          >
+            {Array.from(
+              { length: 28 },
+              (_, i) => i + 1
+            ).map((day) => (
+              <option
+                key={day}
+                value={day}
+              >
+                {day}
+              </option>
+            ))}
+          </select>
 
         </div>
 
@@ -123,18 +177,14 @@ export default function RecurringIncomeModal({
             }
             className="w-full rounded-xl border border-slate-300 px-4 py-3"
           >
-            <option value="monthly">
-              Mensual
-            </option>
-
-            <option value="biweekly">
-              Quincenal
-            </option>
-
-            <option value="weekly">
-              Semanal
-            </option>
-
+            {frequencies.map((item) => (
+              <option
+                key={item.value}
+                value={item.value}
+              >
+                {item.label}
+              </option>
+            ))}
           </select>
 
         </div>
@@ -143,9 +193,9 @@ export default function RecurringIncomeModal({
 
       <div>
 
-        <p className="mb-3 text-sm font-medium">
-          Pagas extraordinarias
-        </p>
+        <label className="mb-3 block text-sm font-medium">
+          Pagas extra
+        </label>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
 

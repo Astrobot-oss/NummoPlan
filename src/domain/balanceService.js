@@ -1,18 +1,14 @@
 export function createBalance() {
   return {
-    salary: {
-      amount: 0,
-      payDay: 1,
-      frequency: "monthly",
-      extraPayments: [],
-      lastGenerated: null,
-    },
-
     recurringIncome: [],
 
     movements: [],
   };
 }
+
+// ------------------------
+// MOVIMIENTOS
+// ------------------------
 
 export function addMovement(balance, movement) {
   return {
@@ -46,12 +42,9 @@ export function deleteMovement(balance, id) {
   };
 }
 
-export function updateSalary(balance, salary) {
-  return {
-    ...balance,
-    salary,
-  };
-}
+// ------------------------
+// INGRESOS RECURRENTES
+// ------------------------
 
 export function addRecurringIncome(balance, income) {
   return {

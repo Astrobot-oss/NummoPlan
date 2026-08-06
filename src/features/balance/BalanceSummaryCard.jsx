@@ -1,20 +1,13 @@
-import {
-  getBalanceStats,
-  getAvailableToInvest,
-} from "../../domain/balanceCalculations";
-
 export default function BalanceSummaryCard({
-  balance,
+  summary,
 }) {
   const {
     totalIncome,
     totalExpenses,
     savings,
     savingsRate,
-  } = getBalanceStats(balance);
-
-  const availableToInvest =
-    getAvailableToInvest(balance);
+    availableToInvest,
+  } = summary;
 
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">

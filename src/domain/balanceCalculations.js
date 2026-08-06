@@ -89,3 +89,59 @@ export function getLargestExpenseCategory(balance) {
     amount,
   };
 }
+export function getMovementsByMonth(balance, year, month) {
+  return balance.movements.filter((movement) => {
+    const date = new Date(movement.date);
+
+    return (
+      date.getFullYear() === year &&
+      date.getMonth() === month
+    );
+  });
+}
+
+export function getMonthlyStats(
+  balance,
+  year,
+  month
+) {
+  const movements = getMovementsByMonth(
+    balance,
+    year,
+    month
+  );
+
+  return getBalanceStats({
+    ...balance,
+    movements,
+  });
+}
+
+export function getRecentMovements(
+  balance,
+  limit = 5
+) {
+  return [...balance.movements]
+    .sort(
+      (a, b) =>
+        new Date(b.date) - new Date(a.date)
+    )
+    .slice(0, limit);
+}
+
+export function getRecurringIncomeTotal(balance) {
+  return balance.recurringIncome.reduce(
+    (total, income) => total + income.amount,
+    0
+  );
+}
+
+export function getNetWorth(balance) {
+  const {
+    totalIncome,
+    totalExpenses,
+  } = getBalanceStats(balance);
+
+  return totalIncome - totalExpenses;
+}
+
