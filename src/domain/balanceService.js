@@ -1,7 +1,7 @@
 export function createBalance() {
   return {
     recurringIncome: [],
-
+    recurringExpense: [],
     movements: [],
   };
 }
@@ -72,6 +72,41 @@ export function deleteRecurringIncome(balance, id) {
   return {
     ...balance,
     recurringIncome: balance.recurringIncome.filter(
+      (item) => item.id !== id
+    ),
+  };
+}
+
+// ------------------------
+// GASTOS RECURRENTES
+// ------------------------
+
+export function addRecurringExpense(balance, expense) {
+  return {
+    ...balance,
+    recurringExpense: [
+      {
+        id: Date.now(),
+        ...expense,
+      },
+      ...(balance.recurringExpense || []),
+    ],
+  };
+}
+
+export function updateRecurringExpense(balance, expense) {
+  return {
+    ...balance,
+    recurringExpense: (balance.recurringExpense || []).map((item) =>
+      item.id === expense.id ? expense : item
+    ),
+  };
+}
+
+export function deleteRecurringExpense(balance, id) {
+  return {
+    ...balance,
+    recurringExpense: (balance.recurringExpense || []).filter(
       (item) => item.id !== id
     ),
   };

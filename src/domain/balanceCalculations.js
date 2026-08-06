@@ -145,3 +145,15 @@ export function getNetWorth(balance) {
   return totalIncome - totalExpenses;
 }
 
+export function getBalanceSummary(balance = { movements: [], recurringIncome: [] }) {
+  const stats = getBalanceStats(balance);
+  const availableToInvest = getAvailableToInvest(balance);
+
+  return {
+    totalIncome: stats.totalIncome,
+    totalExpenses: stats.totalExpenses,
+    savings: stats.savings,
+    savingsRate: stats.savingsRate,
+    availableToInvest,
+  };
+}

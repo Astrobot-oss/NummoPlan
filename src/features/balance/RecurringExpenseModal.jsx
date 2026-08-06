@@ -1,26 +1,22 @@
 import { useState, useEffect } from "react";
 import PrimaryButton from "../../components/PrimaryButton";
 
-export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
+export function RecurringExpenseModal({ recurringExpense, onClose, onSubmit }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [frequency, setFrequency] = useState("monthly");
   const [day, setDay] = useState("1");
   const [secondDay, setSecondDay] = useState("15");
-  const [targetMonths, setTargetMonths] = useState(["3", "6", "9", "12"]); // Para trimestral o anual
-  const [hasExtraPay, setHasExtraPay] = useState(false);
-  const [extraPayMonths, setExtraPayMonths] = useState(["6", "12"]);
+  const [targetMonths, setTargetMonths] = useState(["3", "6", "9", "12"]);
 
   useEffect(() => {
-    if (recurringIncome) {
-      setTitle(recurringIncome.title || "");
-      setAmount(recurringIncome.amount || "");
-      setFrequency(recurringIncome.frequency || "monthly");
-      setDay(recurringIncome.day || "1");
-      setSecondDay(recurringIncome.secondDay || "15");
-      setTargetMonths(recurringIncome.targetMonths || (recurringIncome.frequency === "yearly" ? ["12"] : ["3", "6", "9", "12"]));
-      setHasExtraPay(recurringIncome.hasExtraPay || false);
-      setExtraPayMonths(recurringIncome.extraPayMonths || ["6", "12"]);
+    if (recurringExpense) {
+      setTitle(recurringExpense.title || "");
+      setAmount(recurringExpense.amount || "");
+      setFrequency(recurringExpense.frequency || "monthly");
+      setDay(recurringExpense.day || "1");
+      setSecondDay(recurringExpense.secondDay || "15");
+      setTargetMonths(recurringExpense.targetMonths || (recurringExpense.frequency === "yearly" ? ["12"] : ["3", "6", "9", "12"]));
     } else {
       setTitle("");
       setAmount("");
@@ -28,31 +24,27 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
       setDay("1");
       setSecondDay("15");
       setTargetMonths(["3", "6", "9", "12"]);
-      setHasExtraPay(false);
-      setExtraPayMonths(["6", "12"]);
     }
-  }, [recurringIncome]);
+  }, [recurringExpense]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title || !amount) return;
 
     onSubmit({
-      id: recurringIncome ? recurringIncome.id : (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substr(2, 9)),
+      id: recurringExpense ? recurringExpense.id : (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString() + Math.random().toString(36).substr(2, 9)),
       title,
       amount: Number(amount),
       frequency,
       day: Number(day),
       secondDay: frequency === "biweekly" ? Number(secondDay) : null,
       targetMonths: frequency === "quarterly" || frequency === "yearly" ? targetMonths : null,
-      hasExtraPay: frequency === "monthly" ? hasExtraPay : false,
-      extraPayMonths: frequency === "monthly" && hasExtraPay ? extraPayMonths : [],
     });
   };
 
   const toggleTargetMonth = (month) => {
     if (frequency === "yearly") {
-      setTargetMonths([month]); // Anual solo permite un mes
+      setTargetMonths([month]);
     } else {
       if (targetMonths.includes(month)) {
         if (targetMonths.length > 1) {
@@ -61,14 +53,6 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
       } else {
         setTargetMonths([...targetMonths, month]);
       }
-    }
-  };
-
-  const toggleExtraPayMonth = (month) => {
-    if (extraPayMonths.includes(month)) {
-      setExtraPayMonths(extraPayMonths.filter((m) => m !== month));
-    } else {
-      setExtraPayMonths([...extraPayMonths, month]);
     }
   };
 
@@ -91,10 +75,10 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <h2 className="text-xl font-bold text-slate-900">
-          {recurringIncome ? "Editar ingreso recurrente" : "Nuevo ingreso recurrente"}
+          {recurringExpense ? "Editar gasto recurrente" : "Nuevo gasto recurrente"}
         </h2>
         <p className="text-xs text-slate-500 mt-0.5">
-          Configura tus entradas de dinero periódicas y fechas de cobro.
+          Configura tus obligaciones fijas periódicas y fechas de cargo.
         </p>
       </div>
 
@@ -108,7 +92,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Ej: Nómina, Alquiler cobrado..."
+            placeholder="Ej: Seguro del coche, Suscripción..."
             className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all"
           />
         </div>
@@ -116,7 +100,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-              Cantidad Neta (€)
+              Cantidad (€)
             </label>
             <input
               type="number"
@@ -151,12 +135,11 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
           </div>
         </div>
 
-        {/* Configuración de días y meses según frecuencia */}
         {frequency === "biweekly" ? (
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-                Primer día de cobro
+                Primer día de cargo
               </label>
               <input
                 type="number"
@@ -169,7 +152,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
             </div>
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-                Segundo día de cobro
+                Segundo día de cargo
               </label>
               <input
                 type="number"
@@ -185,7 +168,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
           <div className="space-y-4 pt-2 border-t border-slate-100">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-                {frequency === "yearly" ? "Mes del cobro anual" : "Meses de cobro trimestral"}
+                {frequency === "yearly" ? "Mes del cargo anual" : "Meses de cargo trimestral"}
               </label>
               <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
                 {monthsList.map((m) => (
@@ -207,7 +190,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-                Día del mes en que se cobra
+                Día del mes en que se carga
               </label>
               <input
                 type="number"
@@ -222,7 +205,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
         ) : (
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-              Día de cobro habitual
+              Día de cargo habitual
             </label>
             <input
               type="number"
@@ -232,44 +215,6 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
               onChange={(e) => setDay(e.target.value)}
               className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all"
             />
-          </div>
-        )}
-
-        {frequency === "monthly" && (
-          <div className="pt-2 border-t border-slate-100 space-y-3">
-            <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-700">
-                ¿Incluye pagas extra?
-              </label>
-              <input
-                type="checkbox"
-                checked={hasExtraPay}
-                onChange={(e) => setHasExtraPay(e.target.checked)}
-                className="w-4 h-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
-              />
-            </div>
-
-            {hasExtraPay && (
-              <div className="space-y-2">
-                <span className="block text-xs text-slate-500">Selecciona los meses de paga extra:</span>
-                <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                  {monthsList.map((m) => (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => toggleExtraPayMonth(m.id)}
-                      className={`py-2 px-2 text-xs font-medium rounded-xl border transition-all ${
-                        extraPayMonths.includes(m.id)
-                          ? "bg-slate-900 text-white border-slate-900"
-                          : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
-                      }`}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -283,7 +228,7 @@ export function RecurringIncomeModal({ recurringIncome, onClose, onSubmit }) {
           Cancelar
         </button>
         <PrimaryButton type="submit">
-          {recurringIncome ? "Guardar cambios" : "Añadir ingreso"}
+          {recurringExpense ? "Guardar cambios" : "Añadir gasto"}
         </PrimaryButton>
       </div>
     </form>

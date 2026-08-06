@@ -1,7 +1,7 @@
 import ActionMenu from "../../components/ActionMenu";
 
-export default function RecurringIncomeCard({
-  recurringIncome = [],
+export default function RecurringExpenseCard({
+  recurringExpense = [],
   onAdd,
   onEdit,
   onDelete,
@@ -10,9 +10,9 @@ export default function RecurringIncomeCard({
     <div className="rounded-3xl bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Ingresos recurrentes</h3>
+          <h3 className="text-lg font-semibold">Gastos recurrentes</h3>
           <p className="mt-1 text-sm text-slate-500">
-            Gestiona tus fuentes de ingresos periódicas.
+            Gestiona tus gastos periódicos.
           </p>
         </div>
         <button
@@ -24,15 +24,15 @@ export default function RecurringIncomeCard({
       </div>
 
       <div className="mt-6">
-        {recurringIncome.length === 0 ? (
+        {recurringExpense.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 py-8 text-center">
             <p className="text-sm text-slate-500">
-              No hay ingresos recurrentes registrados.
+              No hay gastos recurrentes registrados.
             </p>
           </div>
         ) : (
           <div className="space-y-3">
-            {recurringIncome.map((item) => (
+            {recurringExpense.map((item) => (
               <div
                 key={item.id}
                 className="flex items-center justify-between rounded-2xl border border-slate-200 p-4"
@@ -44,8 +44,8 @@ export default function RecurringIncomeCard({
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <p className="text-base font-bold text-green-600">
-                    +{Number(item.amount || 0).toLocaleString("es-ES")} €
+                  <p className="text-base font-bold text-red-500">
+                    -{Number(item.amount || 0).toLocaleString("es-ES")} €
                   </p>
                   <ActionMenu
                     items={[
