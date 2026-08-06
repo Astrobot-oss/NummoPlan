@@ -10,7 +10,7 @@ Más que registrar movimientos como hace una aplicación bancaria, NummoPlan pre
 - ¿Cuánto dinero necesito realmente para vivir?
 - ¿Qué decisiones frenan mi patrimonio?
 
-La filosofía del proyecto es transformar datos financieros en información útil para tomar mejores decisiones.
+La filosofía del proyecto consiste en transformar datos financieros en información útil para ayudar al usuario a tomar mejores decisiones.
 
 ---
 
@@ -18,66 +18,75 @@ La filosofía del proyecto es transformar datos financieros en información úti
 
 ## ✅ Objetivos de ahorro
 
-- Crear objetivos.
-- Seguimiento del progreso.
-- Aportaciones.
-- Eliminación y edición.
-- Persistencia mediante LocalStorage.
+Incluye:
+
+- CRUD completo
+- Seguimiento del progreso
+- Aportaciones
+- Página de detalle
+- Historial
+- Persistencia mediante LocalStorage
 
 ---
 
 ## ✅ Patrimonio e inversiones
 
-Actualmente permite gestionar inversiones de forma completa:
+Actualmente permite gestionar inversiones de forma completa.
 
-- Crear inversiones.
-- Compra de participaciones.
-- Venta de participaciones.
-- Registro de dividendos.
-- Actualización del precio de mercado.
-- Histórico de movimientos.
-- Histórico de precios.
-- Gráfica individual de evolución.
-- Cálculo automático de:
+Incluye:
 
-  - Participaciones
-  - Capital invertido
-  - Precio medio
-  - Valor actual
-  - Rentabilidad
-  - Dividendos recibidos
+- Crear inversiones
+- Compra de participaciones
+- Venta de participaciones
+- Registro de dividendos
+- Actualización del valor de mercado
+- Histórico de movimientos
+- Histórico de precios
+- Gráfica individual
 
-- Persistencia mediante LocalStorage.
+Calcula automáticamente:
 
----
+- Participaciones
+- Capital invertido
+- Precio medio
+- Valor actual
+- Rentabilidad
+- Dividendos recibidos
 
-## 🚧 Deudas
-
-Actualmente incluye:
-
-- CRUD completo.
-- Registro de pagos.
-- Historial de pagos.
-- Página de detalle.
-- Indicadores de progreso.
-- Persistencia mediante LocalStorage.
-
-Continúa mejorándose visualmente y adaptándose completamente a dispositivos móviles.
+Persistencia mediante LocalStorage.
 
 ---
 
-## 🚧 Balance (Ingresos y gastos)
+## ✅ Deudas
 
-Nuevo módulo en desarrollo cuyo objetivo no es actuar como un extracto bancario, sino como el centro de control financiero del usuario.
+Incluye:
 
-Permitirá:
+- CRUD completo
+- Registro de pagos
+- Historial de pagos
+- Página detalle
+- Indicadores de progreso
+- Persistencia mediante LocalStorage
+
+---
+
+## 🚧 Balance
+
+Balance será el centro financiero de NummoPlan.
+
+No pretende comportarse como un extracto bancario, sino explicar qué ocurre con el dinero del usuario.
+
+Actualmente se encuentra en desarrollo.
 
 ### Ingresos recurrentes
 
-- Salario.
-- Día habitual de cobro.
-- Pagas extraordinarias configurables.
-- Otros ingresos periódicos.
+Permitirá configurar:
+
+- nómina
+- pensión
+- alquiler
+- negocio
+- cualquier ingreso periódico
 
 ### Movimientos
 
@@ -85,44 +94,42 @@ Registro manual de:
 
 - ingresos
 - gastos
-- transferencias futuras entre módulos
 
-Cada movimiento podrá clasificarse mediante categorías y etiquetas.
+En futuras versiones recibirá automáticamente movimientos procedentes de otros módulos.
 
 ### Inteligencia financiera
 
-El sistema calculará automáticamente:
+Calculará automáticamente:
 
 - ahorro mensual
 - tasa de ahorro
 - dinero disponible para invertir
-- porcentaje del salario comprometido
 - evolución mensual
-- comparación con meses anteriores
+- comparativas
+- categorías de mayor gasto
 
 ### Análisis
 
-Se incorporarán:
+Mostrará:
 
-- gráficos circulares de gastos
-- evolución temporal
 - distribución por categorías
+- evolución temporal
 - tendencias
-
-### Insights
-
-NummoPlan ofrecerá recomendaciones automáticas como:
-
-- "Este mes has ahorrado un 12 % más."
-- "Tus gastos en ocio han aumentado un 35 %."
-- "Podrías invertir aproximadamente 320 € al mes."
-- "Las suscripciones representan el 9 % de tus gastos."
+- insights automáticos
 
 ---
 
 ## ⏳ Inmuebles
 
-Pendiente.
+Pendiente de desarrollo.
+
+Permitirá gestionar:
+
+- inmuebles
+- valor de mercado
+- hipotecas
+- gastos asociados
+- rentabilidad
 
 ---
 
@@ -130,9 +137,7 @@ Pendiente.
 
 Será el último gran módulo.
 
-No almacenará datos propios.
-
-Consumirá información de:
+Consumirá información procedente de:
 
 - Objetivos
 - Patrimonio
@@ -140,7 +145,7 @@ Consumirá información de:
 - Balance
 - Inmuebles
 
-para ofrecer una visión global del patrimonio del usuario.
+Nunca almacenará información propia.
 
 ---
 
@@ -171,16 +176,42 @@ src
 └── data
 ```
 
-Cada módulo mantiene la misma estructura:
+Cada módulo mantiene siempre la misma filosofía.
 
-- Página principal
-- Página detalle
-- Formularios
-- Cards
-- Componentes específicos
 - Context
 - Service
 - Calculations
+- Componentes
+- Formularios
+- Página principal
+- Página detalle
+
+La lógica de negocio permanece completamente separada de la interfaz.
+
+---
+
+# Metodología de desarrollo
+
+El proyecto sigue una metodología basada en bloques completos.
+
+Cada nueva funcionalidad se desarrolla en este orden:
+
+1. Diseño funcional.
+2. Componentes.
+3. Formularios.
+4. Servicios.
+5. Cálculos.
+6. Context.
+7. Integración.
+8. Persistencia.
+9. Pruebas.
+10. Refactorización.
+
+La integración siempre es el último paso.
+
+No se implementan funcionalidades apoyándose en componentes incompletos, imports inexistentes o código preparado "para más adelante".
+
+Cada bloque debe quedar completamente funcional antes de comenzar el siguiente.
 
 ---
 
@@ -192,6 +223,7 @@ NummoPlan sigue una arquitectura inspirada en Clean Architecture.
 - Los Context almacenan el estado.
 - Toda la lógica vive en `src/domain`.
 - Las páginas coordinan la interfaz.
+- Los cálculos permanecen separados de la presentación.
 
 El objetivo es mantener un código limpio, reutilizable y preparado para crecer durante años.
 
@@ -201,20 +233,19 @@ El objetivo es mantener un código limpio, reutilizable y preparado para crecer 
 
 NummoPlan no pretende sustituir a un banco.
 
-Pretende convertirse en un copiloto financiero.
+Pretende convertirse en un asistente financiero.
 
-Mientras un banco muestra movimientos, NummoPlan ayuda a comprender qué significan esos movimientos y cómo afectan al patrimonio presente y futuro del usuario.
+Mientras una aplicación bancaria muestra movimientos, NummoPlan ayuda a comprender qué significan esos movimientos y cómo afectan al patrimonio presente y futuro.
 
-La aplicación evolucionará hacia un sistema capaz de conectar automáticamente todos los módulos:
+La aplicación evolucionará hacia un ecosistema completamente conectado donde:
 
-- compras de inversiones
-- dividendos
-- pagos de deudas
-- ingresos
-- gastos
-- inmuebles
+- comprar una inversión generará automáticamente un gasto
+- vender una inversión generará un ingreso
+- cobrar dividendos actualizará Balance
+- pagar una deuda registrará automáticamente un movimiento
+- los inmuebles generarán ingresos y gastos automáticamente
 
-para generar un análisis financiero unificado.
+Todo ello permitirá obtener un análisis financiero unificado.
 
 ---
 
@@ -227,19 +258,21 @@ Actualmente utilizan LocalStorage:
 - Deudas
 - Balance
 
-Hasta la futura sincronización en la nube.
+En el futuro podrá sustituirse por sincronización en la nube sin modificar la arquitectura.
 
 ---
 
 # Responsive
 
-Toda nueva funcionalidad se desarrolla pensando primero en:
+La aplicación sigue una estrategia Mobile First.
+
+El desarrollo funcional tiene prioridad.
+
+Una vez finalizada cada funcionalidad se realiza una revisión completa de:
 
 - móvil
 - tablet
 - escritorio
-
-evitando rehacer componentes posteriormente.
 
 ---
 
@@ -252,13 +285,31 @@ npm run dev
 
 ---
 
-# Estado del proyecto
+# Documentación
 
-Consultar:
+El proyecto dispone de documentación interna para facilitar su mantenimiento.
 
 - ProjectStatus.md
 - RoadMap.md
 - Decisions.md
+- PROJECT_ARCHITECTURE.md
+- AI_INSTRUCTIONS.md
+
+---
+
+# Estado actual
+
+Actualmente NummoPlan dispone de:
+
+- Arquitectura consolidada
+- Componentes reutilizables
+- Persistencia local
+- Objetivos funcionales
+- Patrimonio funcional
+- Deudas funcionales
+- Desarrollo avanzado del módulo Balance
+
+La siguiente gran fase consiste en finalizar Balance y comenzar la integración automática entre todos los módulos.
 
 ---
 
@@ -273,3 +324,5 @@ Entre las funcionalidades previstas destacan:
 - Alertas inteligentes
 - Exportación de datos
 - Sincronización en la nube
+
+El objetivo final es convertir NummoPlan en un asistente financiero personal capaz de ayudar al usuario a comprender y mejorar su situación económica mediante análisis inteligentes y una visión global de todo su patrimonio.

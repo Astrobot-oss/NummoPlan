@@ -20,7 +20,7 @@ export default function RecurringIncomeModal({
   salary,
   onSubmit,
 }) {
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [payDay, setPayDay] = useState(1);
   const [frequency, setFrequency] = useState("monthly");
   const [extraPayments, setExtraPayments] = useState([]);

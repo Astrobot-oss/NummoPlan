@@ -1,42 +1,57 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
 import {
-  loadData,
-  saveData,
-} from "../utils/storage";
+  addMovement,
+  updateSalary,
+} from "../domain/balanceService";
 
 const BalanceContext = createContext();
 
 const initialBalance = {
- recurringIncome: [],
+  salary: {
+    amount: 0,
+    payDay: 1,
+    frequency: "monthly",
+    extraPayments: [],
+  },
+
+  recurringIncome: [],
+
   movements: [],
 };
 
 export function BalanceProvider({ children }) {
-  const [balance, setBalance] = useState(() => {
-  return loadData("balance") || initialBalance;
-});
+  const [balance, setBalance] = useState(initialBalance);
 
-  useEffect(() => {
-  saveData("balance", balance);
-}, [balance]);
+  function createMovement(movement) {
+    setBalance((current) =>
+      addMovement(current, movement)
+    );
+  }
+
+  function editSalary(salary) {
+  setBalance((current) =>
+    updateSalary(current, salary)
+  );
+}
 
   return (
     <BalanceContext.Provider
       value={{
-        balance,
-        setBalance,
-      }}
+  balance,
+  createMovement,
+  editSalary,
+}}
     >
       {children}
     </BalanceContext.Provider>
   );
 }
+
 export function useBalance() {
   return useContext(BalanceContext);
 }

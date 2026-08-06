@@ -3,7 +3,99 @@
 El desarrollo de NummoPlan se organiza en fases para construir una aplicación sólida, escalable y centrada en ayudar al usuario a tomar mejores decisiones financieras.
 
 ---
+# 📐 Metodología de desarrollo
 
+Todas las fases de NummoPlan deberán seguir las siguientes reglas de desarrollo.
+
+## Desarrollo por bloques completos
+
+Cada funcionalidad se desarrollará como un bloque completo.
+
+Ejemplo:
+
+Balance
+
+- Context
+- Service
+- Calculations
+- Componentes
+- Modales
+- Formularios
+- Hooks
+- Utilidades
+
+Si una funcionalidad necesita 30 archivos para funcionar, primero deberán estar creados y terminados esos 30 archivos antes de comenzar su integración.
+
+No se implementarán funcionalidades sobre componentes incompletos.
+
+---
+
+## Orden obligatorio de desarrollo
+
+Cada feature seguirá siempre este orden:
+
+1. Diseño funcional.
+2. Componentes.
+3. Formularios.
+4. Servicios.
+5. Cálculos.
+6. Context.
+7. Integración.
+8. Persistencia.
+9. Pruebas.
+10. Refactorización.
+
+No se alterará este orden salvo que exista un error crítico.
+
+---
+
+## Integración
+
+La integración siempre será el último paso de una feature.
+
+No se conectarán componentes a Context, Services o cálculos que aún no estén completamente terminados.
+
+No se añadirán imports, estados o funciones cuya dependencia todavía no exista.
+
+---
+
+## Refactorización
+
+No se reorganizarán carpetas, componentes o imports mientras una funcionalidad no esté completamente operativa.
+
+Toda refactorización se realizará una vez el flujo completo funcione de principio a fin.
+
+---
+
+## Experiencia de usuario
+
+La UX se desarrollará una vez la funcionalidad esté terminada.
+
+Primero:
+
+- funcionamiento
+
+Después:
+
+- validaciones
+- accesibilidad
+- mejoras visuales
+- animaciones
+- optimización del flujo
+
+No se interrumpirá el desarrollo funcional para mejorar la interfaz salvo que exista un problema grave de usabilidad.
+
+---
+
+## Desarrollo guiado
+
+Antes de modificar cualquier archivo se revisarán todas las dependencias necesarias.
+
+No se desarrollará "a ciegas".
+
+Si una funcionalidad depende de archivos aún no terminados, se detendrá la implementación hasta completar dichas dependencias.
+
+Cada paso del desarrollo deberá dejar una funcionalidad estable y completamente operativa antes de continuar con la siguiente.
 # Fase 1 · Núcleo financiero
 
 ## 🎯 Objetivos
@@ -63,6 +155,13 @@ Este módulo será el centro de control económico del usuario.
 - [x] Context
 - [x] Service
 - [x] Calculations
+- [x] BalanceSummaryCard
+- [x] RecurringIncomeCard
+- [x] RecurringIncomeModal
+- [x] MovementModal
+- [x] TransactionsHistory
+- [ ] MovementForm
+- [ ] MonthlyInsightsCard
 
 ### Ingresos recurrentes
 

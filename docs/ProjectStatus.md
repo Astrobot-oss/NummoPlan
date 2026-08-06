@@ -13,9 +13,101 @@ Estado actualizado del proyecto NummoPlan.
 | 💳 Deudas | ✅ Funcional |
 | ⚖️ Balance | 🚧 En desarrollo |
 | 🏠 Inmuebles | ⏳ Pendiente |
-| 📱 Responsive | 🚧 En desarrollo |
+| 📱 Responsive | 🚧 Pendiente de revisión |
 | 📊 Dashboard | ⏳ Pendiente |
 | ⚙️ Ajustes | ⏳ Pendiente |
+
+---
+
+# Metodología de desarrollo
+
+A partir del desarrollo del módulo Balance todo el proyecto seguirá la siguiente metodología.
+
+## Desarrollo por bloques completos
+
+Cada funcionalidad se desarrollará como un bloque completo.
+
+Antes de comenzar la integración deberán estar terminados todos los archivos que forman parte de la feature.
+
+Ejemplo:
+
+Balance
+
+- Context
+- Service
+- Calculations
+- Componentes
+- Formularios
+- Modales
+- Cards
+- Hooks
+- Utilidades
+
+Solo cuando todas las piezas estén terminadas comenzará la integración.
+
+---
+
+## Orden obligatorio
+
+Toda funcionalidad seguirá siempre este orden.
+
+1. Diseño funcional.
+2. Componentes.
+3. Formularios.
+4. Servicios.
+5. Cálculos.
+6. Context.
+7. Integración.
+8. Persistencia.
+9. Pruebas.
+10. Refactorización.
+
+---
+
+## Integración
+
+La integración siempre será el último paso.
+
+Nunca se desarrollarán componentes apoyándose en:
+
+- imports inexistentes
+- funciones aún no implementadas
+- estados provisionales
+- componentes vacíos
+- código preparado para el futuro
+
+---
+
+## Desarrollo guiado
+
+Antes de modificar cualquier archivo deberán comprobarse todas sus dependencias.
+
+No se desarrollará nunca "a ciegas".
+
+Cada bloque deberá quedar completamente operativo antes de comenzar el siguiente.
+
+---
+
+## UX
+
+El desarrollo se divide en dos fases.
+
+### Fase funcional
+
+Conseguir que toda la funcionalidad funcione.
+
+### Fase UX
+
+Posteriormente se mejorarán:
+
+- validaciones
+- experiencia de usuario
+- diseño visual
+- accesibilidad
+- animaciones
+- simplificación de formularios
+
+Todas las mejoras detectadas durante el desarrollo funcional quedarán anotadas para esta fase.
 
 ---
 
@@ -110,36 +202,50 @@ Estado:
 
 🚧 En desarrollo
 
-Completado:
+## Base completada
 
 - Arquitectura del módulo
 - BalanceContext
 - balanceService
 - balanceCalculations
 - Persistencia mediante LocalStorage
-- Modelo de datos inicial
-- Estructura preparada para ingresos recurrentes
+- Modelo de datos
+- SummaryCard
+- TransactionsHistory
+- RecurringIncomeCard
+- RecurringIncomeModal
+- MovementModal
+- Modal reutilizable integrado
 
-En desarrollo:
+## En desarrollo
 
-- Página principal
-- Registro manual de ingresos
-- Registro manual de gastos
-- Categorías
+- Registro manual de movimientos
+- MovementForm
+- Integración completa de MovementModal
 - Ingresos recurrentes
-- Tarjetas resumen
+- MonthlyInsightsCard
+- Flujo completo del módulo
 
-Pendiente:
+## Pendiente
 
 - Estadísticas inteligentes
 - Comparativas mensuales
-- Gráfico circular de gastos
+- Gráfico circular
 - Evolución del ahorro
 - Integración automática con Patrimonio
 - Integración automática con Deudas
 - Integración automática con Inmuebles
-- Reglas automáticas de movimientos
 - Dashboard
+
+## Mejoras UX detectadas
+
+Se implementarán una vez el módulo sea completamente funcional.
+
+- Mejor selector del día de cobro.
+- Resolver automáticamente meses con menos días.
+- Rediseñar el selector de pagas extraordinarias.
+- Validaciones del formulario.
+- Mejor flujo de creación de movimientos.
 
 ---
 
@@ -166,26 +272,28 @@ Planificado:
 
 Estado:
 
-🚧 En desarrollo
+🚧 Pendiente de revisión global
 
-Completado:
+Completado parcialmente:
 
-- MainLayout adaptable
-- Sidebar adaptable
-- Modal adaptable
-- PrimaryButton adaptable
-- PageHeader adaptable
-- Gran parte del módulo Patrimonio
-- Gran parte del módulo Deudas
+- MainLayout
+- Sidebar
+- Modal
+- PrimaryButton
+- PageHeader
 
 Pendiente:
 
-- Objetivos
-- Balance
+- Revisión completa de Objetivos
+- Revisión completa de Balance
+- Revisión completa de Patrimonio
+- Revisión completa de Deudas
 - Inmuebles
 - Dashboard
 - Ajustes
 - Optimización para tablets
+
+La revisión responsive se realizará cuando cada módulo esté funcionalmente terminado.
 
 ---
 
@@ -195,7 +303,7 @@ Estado:
 
 ⏳ Pendiente
 
-El Dashboard se desarrollará cuando todos los módulos estén terminados.
+Se desarrollará cuando todos los módulos estén finalizados.
 
 Consumirá información de:
 
@@ -205,36 +313,43 @@ Consumirá información de:
 - Balance
 - Inmuebles
 
-No contendrá lógica de negocio propia.
-
-Mostrará únicamente información agregada y análisis.
+Nunca contendrá lógica de negocio.
 
 ---
 
 # Arquitectura
 
-Todos los módulos siguen la misma estructura:
+Todos los módulos siguen el mismo flujo.
 
 ```
+Usuario
+
+↓
+
+Página
+
+↓
+
+Componentes
+
+↓
+
 Context
-      ↓
+
+↓
+
 Service
-      ↓
+
+↓
+
 Calculations
-      ↓
-Components
-      ↓
-Detail
-      ↓
-Page
+
+↓
+
+Persistencia
 ```
 
-Esto garantiza:
-
-- Separación entre lógica y presentación
-- Escalabilidad
-- Reutilización
-- Facilidad de mantenimiento
+Cada capa posee una única responsabilidad.
 
 ---
 
@@ -253,14 +368,15 @@ Todos los módulos futuros seguirán el mismo sistema hasta la incorporación de
 
 # Próximo objetivo
 
-Orden de desarrollo actual:
+Orden de desarrollo actual.
 
-1. Completar Balance.
-2. Finalizar Responsive.
-3. Desarrollar Inmuebles.
-4. Construir Dashboard inteligente.
-5. Completar Ajustes.
-6. Interconectar todos los módulos automáticamente.
+1. Completar funcionalmente Balance.
+2. Revisar UX completa de Balance.
+3. Revisar Responsive de todos los módulos.
+4. Desarrollar Inmuebles.
+5. Construir Dashboard inteligente.
+6. Completar Ajustes.
+7. Interconectar automáticamente todos los módulos.
 
 ---
 
@@ -268,18 +384,16 @@ Orden de desarrollo actual:
 
 NummoPlan no pretende ser únicamente un registro de movimientos.
 
-El objetivo es convertirse en un asistente financiero que ayude al usuario a comprender cómo afectan sus decisiones a su patrimonio.
+Su objetivo es convertirse en un asistente financiero que ayude al usuario a comprender cómo afectan sus decisiones a su patrimonio.
 
-Para ello se desarrollarán análisis como:
+Los análisis deberán responder preguntas como:
 
-- Capacidad real de ahorro.
-- Dinero disponible para invertir.
-- Gastos que más crecen.
-- Comparativas mensuales.
-- Gastos prescindibles.
-- Dependencia del salario.
-- Proyección de independencia financiera.
-- Impacto de cada decisión económica sobre el patrimonio futuro.
+- ¿Cuánto ahorro realmente?
+- ¿Cuánto puedo invertir?
+- ¿Qué gastos crecen más rápido?
+- ¿Qué porcentaje de mis ingresos está comprometido?
+- ¿Qué decisiones frenan más mi patrimonio?
+- ¿Estoy mejor que el mes pasado?
 
 ---
 
@@ -293,6 +407,6 @@ Actualmente NummoPlan dispone de:
 - Objetivos funcionales.
 - Patrimonio funcional.
 - Deudas funcionales.
-- Inicio del módulo Balance.
+- Base del módulo Balance prácticamente completada.
 
-La siguiente gran fase consiste en convertir los distintos módulos en un único ecosistema financiero totalmente interconectado.
+La siguiente gran fase consiste en finalizar Balance y convertir todos los módulos en un único ecosistema financiero completamente interconectado.

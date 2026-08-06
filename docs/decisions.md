@@ -1,16 +1,144 @@
 # 🧠 Decisiones de arquitectura
 
-## Arquitectura general
+# Arquitectura general
 
 - Un Context por módulo.
 - Toda la lógica de negocio vive en `src/domain`.
 - Los componentes únicamente renderizan información.
 - Las páginas coordinan la interfaz.
 - Nunca realizar cálculos dentro de las Cards.
+- Cada módulo debe ser completamente independiente.
+- Toda modificación de datos debe pasar siempre por su Service correspondiente.
 
 ---
 
-## Organización de módulos
+# Metodología de desarrollo
+
+## Desarrollo por bloques completos
+
+Toda funcionalidad deberá desarrollarse como un bloque completo.
+
+Antes de comenzar la integración de una feature deberán existir y estar terminados todos los archivos que la componen.
+
+Ejemplo:
+
+Balance
+
+- Context
+- Service
+- Calculations
+- Cards
+- Detail
+- Modales
+- Formularios
+- Hooks
+- Utilidades
+
+Si una funcionalidad necesita 30 archivos para funcionar, primero deberán completarse esos 30 archivos.
+
+Solo entonces comenzará la integración.
+
+Queda prohibido implementar funcionalidades apoyándose en componentes incompletos o provisionales.
+
+---
+
+## Orden obligatorio de desarrollo
+
+Toda feature seguirá siempre este orden:
+
+1. Diseño funcional.
+2. Componentes.
+3. Formularios.
+4. Servicios.
+5. Cálculos.
+6. Context.
+7. Integración.
+8. Persistencia.
+9. Pruebas.
+10. Refactorización.
+
+No se alterará este orden salvo que exista un error crítico.
+
+---
+
+## Integración
+
+La integración siempre será el último paso.
+
+Nunca deberán añadirse:
+
+- imports de archivos aún no terminados
+- llamadas a funciones inexistentes
+- estados sin uso
+- componentes provisionales
+- código "para más adelante"
+
+Si una dependencia no está terminada, primero deberá completarse.
+
+---
+
+## Desarrollo guiado
+
+Antes de modificar cualquier archivo deberán revisarse todas sus dependencias.
+
+No se desarrollará nunca "a ciegas".
+
+Si una funcionalidad depende de componentes, formularios, servicios o cálculos aún incompletos, se detendrá el desarrollo hasta terminarlos.
+
+El objetivo es evitar volver continuamente sobre los mismos archivos para parchearlos.
+
+---
+
+## Confirmación de cada bloque
+
+Nunca se asumirá que un paso ya está realizado.
+
+Antes de continuar deberá comprobarse que:
+
+- el código existe
+- compila correctamente
+- funciona
+- el usuario confirma que el bloque está terminado
+
+Solo entonces podrá comenzarse el siguiente bloque.
+
+---
+
+## Refactorización
+
+No se reorganizarán carpetas, componentes o imports mientras una funcionalidad no esté completamente terminada.
+
+Toda refactorización se realizará únicamente cuando el flujo completo funcione de principio a fin.
+
+---
+
+## UX
+
+El desarrollo se divide en dos fases claramente diferenciadas.
+
+### Fase 1
+
+Conseguir que toda la funcionalidad funcione correctamente.
+
+### Fase 2
+
+Mejorar:
+
+- validaciones
+- accesibilidad
+- experiencia de usuario
+- diseño visual
+- animaciones
+- optimización del flujo
+- simplificación de formularios
+
+No se interrumpirá el desarrollo funcional para realizar mejoras visuales salvo que exista un problema crítico de usabilidad.
+
+Todas las mejoras detectadas durante el desarrollo deberán anotarse para implementarlas durante esta fase.
+
+---
+
+# Organización de módulos
 
 Cada módulo debe seguir la misma estructura siempre que sea necesario:
 
@@ -21,13 +149,13 @@ Cada módulo debe seguir la misma estructura siempre que sea necesario:
 - InfoCard
 - HistoryCard
 
-Esto mantiene la aplicación consistente y facilita el mantenimiento.
+No todos los módulos necesitan todos los componentes.
 
-No todos los módulos necesitan obligatoriamente todos los componentes, pero cuando existan deberán mantener la misma nomenclatura.
+Cuando existan deberán mantener la misma nomenclatura para conservar una arquitectura homogénea.
 
 ---
 
-## Servicios
+# Servicios
 
 Cada módulo dispone de su propio Service.
 
@@ -40,17 +168,17 @@ Ejemplos:
 
 Responsabilidades:
 
-- Crear
-- Actualizar
-- Eliminar
-- Registrar movimientos
-- Modificar el estado del módulo
+- crear
+- actualizar
+- eliminar
+- registrar movimientos
+- modificar el estado del módulo
 
-Toda modificación de datos debe realizarse desde su Service correspondiente.
+Toda modificación de datos debe realizarse exclusivamente desde su Service.
 
 ---
 
-## Cálculos
+# Cálculos
 
 Todos los cálculos viven separados de la interfaz.
 
@@ -60,13 +188,15 @@ Ejemplos:
 - debtCalculations
 - balanceCalculations
 
-Nunca se repiten cálculos entre componentes.
+Nunca se repetirán cálculos entre componentes.
+
+Toda lógica matemática deberá centralizarse en los archivos de cálculo correspondientes.
 
 ---
 
-## Componentes reutilizables
+# Componentes reutilizables
 
-Siempre que sea posible se reutilizan:
+Siempre que sea posible deberán reutilizarse:
 
 - PageHeader
 - PrimaryButton
@@ -75,27 +205,26 @@ Siempre que sea posible se reutilizan:
 - EmptyState
 - ActionMenu
 - ClickableCardHeader
-- EmptyState
+
+Antes de crear un componente nuevo deberá comprobarse si alguno existente puede reutilizarse.
 
 El objetivo es mantener una interfaz homogénea en toda la aplicación.
-
-Antes de crear un componente nuevo debe comprobarse si alguno existente puede reutilizarse.
 
 ---
 
 # Estados vacíos
 
-Todos los módulos deben ofrecer un estado inicial limpio cuando todavía no existan datos.
+Todos los módulos deberán ofrecer un estado inicial limpio cuando todavía no existan datos.
 
-Debe utilizarse siempre el componente `EmptyState`.
+Siempre deberá utilizarse `EmptyState`.
 
-La filosofía es evitar pantallas vacías o saturadas.
+Cada estado vacío deberá explicar:
 
-Cada módulo debe explicar al usuario:
-
-- qué representa esa sección
+- qué representa la sección
 - por qué todavía no hay información
 - cuál es el siguiente paso recomendado
+
+Nunca deberán existir pantallas vacías.
 
 ---
 
@@ -120,7 +249,7 @@ El precio medio:
 
 Toda la operativa principal se realiza desde el detalle de la inversión.
 
-En el futuro las operaciones repercutirán automáticamente sobre el módulo Balance.
+En futuras versiones las operaciones repercutirán automáticamente sobre Balance.
 
 ---
 
@@ -150,7 +279,7 @@ Un ingreso recurrente puede representar:
 
 Esta decisión permite soportar cualquier perfil de usuario sin modificar la arquitectura.
 
-En el futuro Balance recibirá automáticamente movimientos procedentes de:
+En futuras versiones Balance recibirá automáticamente movimientos procedentes de:
 
 - Patrimonio
 - Deudas
@@ -180,12 +309,12 @@ Actualmente utilizan LocalStorage:
 - Deudas
 - Balance
 
-Todos los módulos nuevos deberán utilizar el mismo sistema mediante las utilidades comunes:
+Todos los módulos deberán utilizar las utilidades comunes:
 
 - loadData()
 - saveData()
 
-No debe accederse directamente a LocalStorage desde los Context.
+No deberá accederse directamente a LocalStorage desde los Context.
 
 ---
 
@@ -193,15 +322,13 @@ No debe accederse directamente a LocalStorage desde los Context.
 
 La aplicación se desarrolla siguiendo una estrategia Mobile First.
 
-Todas las nuevas funcionalidades deberán diseñarse pensando primero en:
+Todas las funcionalidades deberán diseñarse pensando primero en:
 
 - móvil
 - tablet
 - escritorio
 
-Se evitará rehacer componentes posteriormente.
-
-La adaptación responsive forma parte del desarrollo de cada módulo y no de una fase posterior.
+La adaptación responsive forma parte del desarrollo de cada componente.
 
 ---
 
@@ -209,11 +336,14 @@ La adaptación responsive forma parte del desarrollo de cada módulo y no de una
 
 Durante el desarrollo se prioriza completar funcionalidades.
 
-El diseño visual se perfecciona una vez los módulos son funcionales.
+El diseño visual se perfeccionará posteriormente durante la fase de UX.
 
-Esto evita rehacer componentes varias veces.
+La interfaz debe transmitir:
 
-La interfaz debe transmitir simplicidad y claridad.
+- simplicidad
+- claridad
+- rapidez
+- sensación de control
 
 Se evitarán pantallas sobrecargadas.
 
@@ -221,11 +351,11 @@ Se evitarán pantallas sobrecargadas.
 
 # Gráficas
 
-Las gráficas deben trabajar siempre sobre históricos persistentes.
+Las gráficas deberán trabajar siempre sobre históricos persistentes.
 
 Nunca representarán únicamente el estado actual.
 
-Esto permitirá mostrar correctamente la evolución financiera del usuario a lo largo del tiempo.
+Esto permitirá mostrar correctamente la evolución financiera del usuario.
 
 ---
 
@@ -252,7 +382,7 @@ Las recomendaciones evolucionarán conforme aumente la información registrada.
 
 # Integración entre módulos
 
-Los módulos deben diseñarse para poder comunicarse entre sí.
+Los módulos deberán diseñarse para poder comunicarse entre sí.
 
 En futuras versiones:
 
@@ -263,7 +393,7 @@ En futuras versiones:
 - alcanzar un objetivo modificará el Dashboard
 - los inmuebles repercutirán sobre Balance y Patrimonio cuando corresponda
 
-Cada módulo continuará siendo independiente, pero compartirá información mediante sus Services.
+Cada módulo continuará siendo independiente, compartiendo información mediante sus Services.
 
 ---
 
@@ -275,7 +405,7 @@ No pretende sustituir a un banco.
 
 Pretende ayudar al usuario a comprender mejor su situación económica y a tomar mejores decisiones.
 
-Las decisiones técnicas priorizan siempre:
+Todas las decisiones técnicas deberán priorizar siempre:
 
 - Arquitectura
 - Escalabilidad
@@ -283,3 +413,5 @@ Las decisiones técnicas priorizan siempre:
 - Reutilización
 - Mantenibilidad
 - Experiencia de usuario
+- Desarrollo ordenado
+- Integración únicamente sobre funcionalidades completas

@@ -16,7 +16,6 @@ import Balance from "./pages/Balance";
 
 function App() {
  return (
-  <InvestmentProvider>
     <MainLayout>
       <Routes>
         <Route path="/" element={<Dashboard />} />
@@ -40,7 +39,7 @@ function App() {
         />
 </Routes>
     </MainLayout>
-  </InvestmentProvider>
+  
 );
 }
 

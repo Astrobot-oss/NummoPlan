@@ -2,7 +2,7 @@
 
 Este documento describe la arquitectura técnica de NummoPlan.
 
-No explica el funcionamiento para el usuario final, sino cómo está organizado internamente el proyecto para facilitar su mantenimiento y evolución.
+No explica el funcionamiento para el usuario final, sino cómo está organizado internamente el proyecto para facilitar su mantenimiento, escalabilidad y evolución.
 
 ---
 
@@ -10,11 +10,144 @@ No explica el funcionamiento para el usuario final, sino cómo está organizado 
 
 NummoPlan sigue una arquitectura modular inspirada en Clean Architecture.
 
-Cada módulo es independiente.
+Cada módulo es completamente independiente.
 
 La lógica de negocio nunca depende de la interfaz.
 
-La interfaz únicamente representa datos.
+La interfaz únicamente representa información.
+
+Cada capa tiene una única responsabilidad.
+
+La arquitectura debe favorecer:
+
+- escalabilidad
+- reutilización
+- mantenibilidad
+- facilidad de pruebas
+- independencia entre módulos
+
+---
+
+# Metodología de desarrollo
+
+## Desarrollo por bloques completos
+
+Toda nueva funcionalidad deberá desarrollarse como un bloque completo.
+
+Antes de comenzar la integración deberán existir y estar completamente terminados todos los archivos que formen parte de dicha funcionalidad.
+
+Ejemplo:
+
+Balance
+
+- Context
+- Service
+- Calculations
+- Cards
+- Detail
+- Modales
+- Formularios
+- Hooks
+- Utilidades
+
+Si una funcionalidad necesita 30 archivos para funcionar, primero deberán terminarse esos 30 archivos.
+
+Solo entonces comenzará la integración.
+
+Queda prohibido construir funcionalidades apoyándose en componentes incompletos.
+
+---
+
+## Orden obligatorio
+
+Toda feature seguirá siempre el mismo orden.
+
+1. Diseño funcional.
+2. Componentes.
+3. Formularios.
+4. Servicios.
+5. Cálculos.
+6. Context.
+7. Integración.
+8. Persistencia.
+9. Pruebas.
+10. Refactorización.
+
+No deberá alterarse este orden salvo para corregir errores críticos.
+
+---
+
+## Integración
+
+La integración siempre será el último paso.
+
+Nunca deberán añadirse:
+
+- imports de archivos aún inexistentes
+- llamadas a funciones no implementadas
+- estados que todavía no se utilizan
+- componentes provisionales
+- código "para más adelante"
+
+Si cualquier dependencia está incompleta deberá terminarse antes de continuar.
+
+---
+
+## Desarrollo guiado
+
+Antes de modificar un archivo deberán comprobarse todas sus dependencias.
+
+No se desarrollará nunca "a ciegas".
+
+Si una funcionalidad depende de archivos todavía incompletos se detendrá el desarrollo hasta finalizarlos.
+
+El objetivo es evitar volver continuamente sobre los mismos archivos para parchearlos.
+
+---
+
+## Confirmación de cada bloque
+
+Nunca se asumirá que un paso ya está terminado.
+
+Antes de continuar deberá comprobarse que:
+
+- el código existe
+- compila
+- funciona correctamente
+- el usuario confirma que el bloque está finalizado
+
+Solo entonces comenzará el siguiente bloque.
+
+---
+
+## Refactorización
+
+La reorganización de carpetas, componentes o imports únicamente podrá realizarse cuando una funcionalidad esté completamente terminada.
+
+No se refactorizarán funcionalidades parcialmente implementadas.
+
+---
+
+## Desarrollo funcional y UX
+
+Todo módulo se desarrollará en dos fases.
+
+### Fase 1
+
+Conseguir que toda la funcionalidad funcione.
+
+### Fase 2
+
+Mejorar:
+
+- validaciones
+- experiencia de usuario
+- accesibilidad
+- animaciones
+- simplificación de formularios
+- mejoras visuales
+
+Las mejoras detectadas durante el desarrollo deberán anotarse para implementarlas durante esta segunda fase.
 
 ---
 
@@ -50,7 +183,7 @@ Calculations
 Persistencia
 ```
 
-Cada capa tiene una única responsabilidad.
+Cada capa posee una única responsabilidad.
 
 ---
 
@@ -69,11 +202,15 @@ src
 └── data
 ```
 
+Cada carpeta posee una responsabilidad claramente diferenciada.
+
 ---
 
 # Componentes reutilizables
 
-Toda la aplicación reutiliza siempre que sea posible:
+Siempre que sea posible deberán reutilizarse componentes existentes.
+
+Actualmente:
 
 - PageHeader
 - PrimaryButton
@@ -83,7 +220,7 @@ Toda la aplicación reutiliza siempre que sea posible:
 - ActionMenu
 - ClickableCardHeader
 
-Antes de crear un nuevo componente debe comprobarse si alguno de estos puede reutilizarse.
+Antes de crear un componente nuevo deberá comprobarse si alguno existente puede reutilizarse.
 
 ---
 
@@ -91,13 +228,13 @@ Antes de crear un nuevo componente debe comprobarse si alguno de estos puede reu
 
 Existe un Context por módulo.
 
-Responsabilidad:
+Responsabilidades:
 
 - almacenar estado
 - actualizar estado
 - persistir datos
 
-Nunca contiene lógica de negocio.
+Nunca contendrá lógica de negocio.
 
 Actualmente existen:
 
@@ -106,7 +243,7 @@ Actualmente existen:
 - DebtsContext
 - BalanceContext
 
-Pendientes:
+Pendiente:
 
 - RealEstateContext
 
@@ -130,6 +267,7 @@ Responsable de:
 - actualizar
 - eliminar
 - registrar movimientos
+- modificar el estado del módulo
 
 Ejemplos:
 
@@ -138,14 +276,18 @@ Ejemplos:
 - debtService
 - balanceService
 
+Toda modificación de datos deberá realizarse exclusivamente desde su Service.
+
+---
+
 ## Calculations
 
 Responsable de:
 
 - estadísticas
+- métricas
 - porcentajes
 - resúmenes
-- métricas
 - cálculos reutilizables
 
 Ejemplos:
@@ -154,11 +296,13 @@ Ejemplos:
 - debtCalculations
 - balanceCalculations
 
+Nunca deberán repetirse cálculos entre componentes.
+
 ---
 
 # Organización de Features
 
-Cada módulo intenta seguir la misma estructura.
+Siempre que sea posible los módulos seguirán la misma estructura.
 
 ```
 Card
@@ -174,7 +318,9 @@ InfoCard
 HistoryCard
 ```
 
-No todos los módulos necesitan exactamente todos los componentes, pero siempre que sea posible se mantiene esta organización.
+No todos los módulos necesitarán todos los componentes.
+
+Cuando existan deberán mantener esta nomenclatura.
 
 ---
 
@@ -182,8 +328,9 @@ No todos los módulos necesitan exactamente todos los componentes, pero siempre 
 
 Actualmente toda la información se almacena mediante LocalStorage.
 
-Cada módulo utiliza:
+El flujo es:
 
+```
 Context
 
 ↓
@@ -193,14 +340,19 @@ utils/storage
 ↓
 
 LocalStorage
+```
 
-En el futuro podrá sustituirse por una API sin modificar la interfaz.
+Los Context nunca accederán directamente a LocalStorage.
+
+En el futuro podrá sustituirse por una API sin modificar el resto de la arquitectura.
 
 ---
 
 # Responsive
 
-Toda nueva funcionalidad debe diseñarse siguiendo este orden:
+Toda nueva funcionalidad seguirá una estrategia Mobile First.
+
+Orden de desarrollo:
 
 1. móvil
 2. tablet
@@ -247,23 +399,32 @@ Modelo basado en pagos.
 
 Cada pago genera un movimiento.
 
-La deuda nunca guarda valores calculados.
+La deuda nunca almacena valores calculados.
 
-Todo se obtiene mediante debtCalculations.
+Toda la información procede de debtCalculations.
 
 ---
 
 ## Balance
 
-Modelo basado en movimientos.
+Modelo basado en movimientos e ingresos recurrentes.
 
-Tipos previstos:
+Los ingresos recurrentes permiten representar:
+
+- nómina
+- pensión
+- alquiler
+- negocio
+- prestación
+- cualquier ingreso periódico
+
+Los movimientos incluyen:
 
 Ingresos
 
-- salario automático
-- paga extra
+- ingreso recurrente
 - ingreso puntual
+- paga extraordinaria
 
 Gastos
 
@@ -281,17 +442,13 @@ Gastos
 - mascota
 - otros
 
-El salario se configura como un ingreso recurrente.
-
-Las pagas extraordinarias serán opcionales.
-
-Todos los movimientos convivirán en un único historial.
+Todos convivirán en un único historial.
 
 ---
 
 # Interconexión futura
 
-Una de las características principales de NummoPlan será la comunicación entre módulos.
+Uno de los pilares de NummoPlan será la comunicación automática entre módulos.
 
 Ejemplos:
 
@@ -311,7 +468,7 @@ Venta de acciones
 
 ↓
 
-Genera un ingreso.
+Genera automáticamente un ingreso.
 
 ---
 
@@ -327,7 +484,7 @@ Deudas
 
 ↓
 
-Registrar pago
+Registrar un pago
 
 ↓
 
@@ -339,11 +496,11 @@ Inmuebles
 
 ↓
 
-Cobro alquiler
+Cobro de alquiler
 
 ↓
 
-Genera ingreso.
+Genera un ingreso.
 
 ---
 
@@ -351,13 +508,13 @@ Pago de IBI
 
 ↓
 
-Genera gasto.
+Genera un gasto.
 
 ---
 
 Dashboard
 
-Consumirá información de:
+Consumirá información procedente de:
 
 - Objetivos
 - Patrimonio
@@ -371,7 +528,7 @@ Nunca almacenará información propia.
 
 # Filosofía del Balance
 
-El Balance no pretende ser un extracto bancario.
+Balance no pretende ser un extracto bancario.
 
 Su objetivo es responder preguntas como:
 
@@ -380,11 +537,11 @@ Su objetivo es responder preguntas como:
 - ¿Qué categoría está creciendo demasiado?
 - ¿Cuánto podría invertir todos los meses?
 - ¿Qué gastos son innecesarios?
-- ¿Qué porcentaje del salario está comprometido?
+- ¿Qué porcentaje de mis ingresos está comprometido?
 - ¿Estoy mejor que el mes pasado?
 - ¿Cuánto necesito realmente para vivir?
 
-El módulo debe ayudar al usuario a tomar decisiones, no únicamente mostrar movimientos.
+Debe ayudar al usuario a comprender su situación financiera y tomar mejores decisiones.
 
 ---
 
