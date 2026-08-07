@@ -1,79 +1,81 @@
+import { getMonthlyStats, getExpensesByCategory } from "./balanceCalculations";
+
 export function generateMonthlyInsights(balance, targetSavings = 300) {
   const insights = [];
-  const movements = balance?.movements ?? [];
-  const recurringIncome = balance?.recurringIncome ?? [];
-  const recurringExpense = balance?.recurringExpense ?? [];
-
-  const totalMonthlyIncome = recurringIncome.reduce((acc, inc) => {
-    if (inc.frequency === "monthly") return acc + Number(inc.amount || 0);
-    if (inc.frequency === "biweekly") return acc + (Number(inc.amount || 0) * 2);
-    return acc;
-  }, 0);
-
-  const totalMonthlyExpense = recurringExpense.reduce((acc, exp) => {
-    if (exp.frequency === "monthly") return acc + Number(exp.amount || 0);
-    if (exp.frequency === "biweekly") return acc + (Number(exp.amount || 0) * 2);
-    return acc;
-  }, 0);
-
+  
+  // Obtenemos las estadísticas reales del mes actual usando tus funciones de balanceCalculations
   const now = new Date();
-  const currentMonthMovements = movements.filter(m => {
-    const movementDate = new Date(m.date);
-    return movementDate.getMonth() === now.getMonth() && movementDate.getFullYear() === now.getFullYear();
-  });
+  const year = now.getFullYear();
+  const month = now.getMonth();
 
-  const totalVariableSpent = currentMonthMovements
-    .filter(m => m.type === "expense")
-    .reduce((acc, m) => acc + Number(m.amount || 0), 0);
+  const monthlyStats = getMonthlyStats(balance, year, month);
+  const { totalIncome, totalExpenses, savings } = monthlyStats;
 
-  const categoryTotals = currentMonthMovements
-    .filter(m => m.type === "expense")
-    .reduce((acc, m) => {
-      const cat = m.category || "Otros";
-      acc[cat] = (acc[cat] || 0) + Number(m.amount || 0);
-      return acc;
-    }, {});
+  // Obtenemos los gastos por categoría del mes actual de forma limpia
+  const currentMonthMovements = balance?.movements?.filter(m => {
+    const d = new Date(m.date);
+    return d.getFullYear() === year && d.getMonth() === month;
+  }) ?? [];
 
-  const ocioSpent = categoryTotals["Ocio"] || categoryTotals["ocio"] || 0;
-  const ocioBudgetLimit = 150; 
+  const { result: categoryList, totalExpenses: totalVariableSpent } = getExpensesByCategory(currentMonthMovements);
 
-  if (ocioSpent > 0) {
-    if (ocioSpent <= ocioBudgetLimit) {
-      const availableForLeisure = ocioBudgetLimit - ocioSpent;
+  // Encontramos la categoría con mayor gasto
+  const topCategoryData = categoryList.length > 0 ? categoryList[0] : null;
+  const topCategory = topCategoryData ? topCategoryData.category : null;
+  const maxCategorySpent = topCategoryData ? topCategoryData.amount : 0;
+
+  const differenceFromTarget = savings - targetSavings;
+
+  // --- INSIGHTS GLOBALES DE AHORRO ---
+  if (totalIncome > 0 || totalExpenses > 0) {
+    if (differenceFromTarget > 50) {
       insights.push({
         type: "success",
-        title: "¡Buen control en Ocio!",
-        description: `Llevas gastados ${ocioSpent.toFixed(2)} € en ocio este mes. Todavía te quedan ${availableForLeisure.toFixed(2)} € disponibles de tu margen previsto para disfrutar sin salirte de lo planificado.`,
+        title: "¡Excelente ritmo de ahorro!",
+        description: "Has superado tu meta mensual. Tienes margen para darte un capricho o, si prefieres blindar tu futuro, subir tu listón de ahorro.",
       });
-    } else {
-      const exceeded = ocioSpent - ocioBudgetLimit;
+    } else if (differenceFromTarget >= 0 && differenceFromTarget <= 50) {
+      insights.push({
+        type: "success",
+        title: "Vas por buen camino",
+        description: `Estás cumpliendo tu objetivo de ahorro de ${targetSavings} € de forma ajustada este mes. Mantén el ritmo actual en los próximos días para asegurarlo.`,
+      });
+    } else if (savings >= 0 && differenceFromTarget < 0) {
       insights.push({
         type: "warning",
-        title: "Aviso en categoría Ocio",
-        description: `Has superado en ${exceeded.toFixed(2)} € el límite previsto para ocio este mes (${ocioSpent.toFixed(2)} € gastados). Conviene moderar los próximos días.`,
+        title: "Mes ajustado",
+        description: `Tus gastos están muy cerca de tus ingresos y te quedan ${Math.abs(differenceFromTarget).toFixed(2)} € para alcanzar la meta de ahorro. Conviene vigilar los pequeños gastos.`,
+      });
+    } else {
+      insights.push({
+        type: "error",
+        title: "Alerta de déficit",
+        description: "Tus gastos superan los ingresos este mes por un margen crítico. Es momento de congelar compras no esenciales y enfocar el foco en la contención.",
       });
     }
   }
 
-  if (totalMonthlyIncome > 0) {
-    const currentEstimatedSavings = (totalMonthlyIncome - totalMonthlyExpense) - totalVariableSpent;
-    const differenceFromTarget = currentEstimatedSavings - targetSavings;
+  // --- INSIGHTS GENERALES DE CATEGORÍAS ---
+  if (topCategory && maxCategorySpent > 0) {
+    const percentageOfTotal = totalVariableSpent > 0 ? ((maxCategorySpent / totalVariableSpent) * 100).toFixed(0) : 0;
+    const isGlobalSavingsBad = savings < 0 || differenceFromTarget < 0;
 
-    if (differenceFromTarget >= 0) {
+    if (isGlobalSavingsBad) {
       insights.push({
-        type: "success",
-        title: "Vas bien con tu objetivo de ahorro",
-        description: `Estás cumpliendo tu meta de ahorrar ${targetSavings} € este mes. De hecho, vas ${differenceFromTarget.toFixed(2)} € por encima de lo estimado gracias a tus movimientos actuales.`,
+        type: "neutral",
+        title: `Mayor peso en ${topCategory}`,
+        description: `La categoría que más recursos está absorbiendo este mes es ${topCategory} con ${maxCategorySpent.toFixed(2)} € (${percentageOfTotal}% de tus gastos). Revisar esta partida te dará mayor margen.`,
       });
     } else {
       insights.push({
-        type: "warning",
-        title: "Meta de ahorro ajustada",
-        description: `Te faltan ${Math.abs(differenceFromTarget).toFixed(2)} € para alcanzar tu objetivo de ahorro de ${targetSavings} € este mes debido a los gastos registrados.`,
+        type: "success",
+        title: "Distribución equilibrada",
+        description: `Tu mayor gasto actual se concentra en ${topCategory} (${maxCategorySpent.toFixed(2)} €), manteniéndose dentro de un equilibrio saludable con tus ingresos.`,
       });
     }
   }
 
+  // Insight por defecto si no hay datos suficientes
   if (insights.length === 0) {
     insights.push({
       type: "neutral",

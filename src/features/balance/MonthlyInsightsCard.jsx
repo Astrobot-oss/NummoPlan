@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sparkles, TrendingUp, AlertCircle, Info, Settings2 } from "lucide-react";
 
 export default function MonthlyInsightsCard({ insights = [], targetSavings, onTargetChange }) {
   const [isEditing, setIsEditing] = useState(false);
   const [tempTarget, setTempTarget] = useState(targetSavings);
+
+  // Sincroniza el estado local si la prop targetSavings cambia desde el componente padre
+  useEffect(() => {
+    setTempTarget(targetSavings);
+  }, [targetSavings]);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -17,6 +22,8 @@ export default function MonthlyInsightsCard({ insights = [], targetSavings, onTa
         return <TrendingUp className="h-5 w-5 text-emerald-600" />;
       case "warning":
         return <AlertCircle className="h-5 w-5 text-amber-600" />;
+      case "error":
+        return <AlertCircle className="h-5 w-5 text-rose-600" />;
       case "info":
         return <Info className="h-5 w-5 text-blue-600" />;
       default:
@@ -30,6 +37,8 @@ export default function MonthlyInsightsCard({ insights = [], targetSavings, onTa
         return "bg-emerald-50 border-emerald-100 text-emerald-900";
       case "warning":
         return "bg-amber-50 border-amber-100 text-amber-900";
+      case "error":
+        return "bg-rose-50 border-rose-100 text-rose-900";
       case "info":
         return "bg-blue-50 border-blue-100 text-blue-900";
       default:

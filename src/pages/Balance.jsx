@@ -17,6 +17,7 @@ import { RecurringExpenseModal } from "../features/balance/RecurringExpenseModal
 import MovementModal from "../features/balance/MovementModal";
 import { getBalanceSummary } from "../domain/balanceCalculations";
 import { generateMonthlyInsights } from "../domain/insightsCalculations";
+import ExpenseBreakdownCard from "../features/balance/ExpenseBreakdownCard";
 
 export default function Balance() {
   const balanceContext = useBalance();
@@ -149,7 +150,7 @@ export default function Balance() {
               setRecurringExpenseToDelete(id);
             }}
           />
-
+          <ExpenseBreakdownCard movements={balance.movements} />
         </div>
 
       </div>
