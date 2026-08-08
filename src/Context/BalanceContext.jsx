@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const BalanceContext = createContext();
+const BalanceContext = createContext(null);
 
 const LOCAL_STORAGE_KEY = "app_balance_data";
 
@@ -8,38 +8,84 @@ const initialData = {
   movements: [],
   recurringIncome: [],
   recurringExpense: [],
+  monthlyTargets: {},
+  defaultTargetSavings: 300,
 };
+
+function normalizeBalance(data) {
+  return {
+    movements: Array.isArray(data?.movements) ? data.movements : [],
+    recurringIncome: Array.isArray(data?.recurringIncome)
+      ? data.recurringIncome
+      : [],
+    recurringExpense: Array.isArray(data?.recurringExpense)
+      ? data.recurringExpense
+      : [],
+    monthlyTargets:
+      data?.monthlyTargets &&
+      typeof data.monthlyTargets === "object" &&
+      !Array.isArray(data.monthlyTargets)
+        ? data.monthlyTargets
+        : {},
+    defaultTargetSavings:
+      Number(data?.defaultTargetSavings) >= 0
+        ? Number(data.defaultTargetSavings)
+        : 300,
+  };
+}
 
 export function BalanceProvider({ children }) {
   const [balance, setBalance] = useState(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error("Error al cargar los datos de balance", e);
-      }
+
+    if (!saved) {
+      return initialData;
     }
-    return initialData;
+
+    try {
+      return normalizeBalance(JSON.parse(saved));
+    } catch (error) {
+      console.error(
+        "Error al cargar los datos de balance",
+        error
+      );
+
+      return initialData;
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(balance));
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify(balance)
+    );
   }, [balance]);
 
-  // --- MOVIMIENTOS ---
-  const createMovement = (newMovement) => {
+  // ------------------------
+  // MOVIMIENTOS
+  // ------------------------
+
+  const createMovement = (movement) => {
     setBalance((prev) => ({
       ...prev,
-      movements: [newMovement, ...(prev.movements || [])],
+      movements: [
+        {
+          ...movement,
+          id: movement.id ?? Date.now(),
+          date: movement.date ?? new Date().toISOString(),
+        },
+        ...prev.movements,
+      ],
     }));
   };
 
   const editMovement = (updatedMovement) => {
     setBalance((prev) => ({
       ...prev,
-      movements: (prev.movements || []).map((m) =>
-        m.id === updatedMovement.id ? updatedMovement : m
+      movements: prev.movements.map((movement) =>
+        movement.id === updatedMovement.id
+          ? updatedMovement
+          : movement
       ),
     }));
   };
@@ -47,23 +93,36 @@ export function BalanceProvider({ children }) {
   const removeMovement = (id) => {
     setBalance((prev) => ({
       ...prev,
-      movements: (prev.movements || []).filter((m) => m.id !== id),
+      movements: prev.movements.filter(
+        (movement) => movement.id !== id
+      ),
     }));
   };
 
-  // --- INGRESOS RECURRENTES ---
-  const createRecurringIncome = (newIncome) => {
+  // ------------------------
+  // INGRESOS RECURRENTES
+  // ------------------------
+
+  const createRecurringIncome = (income) => {
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: [newIncome, ...(prev.recurringIncome || [])],
+      recurringIncome: [
+        {
+          ...income,
+          id: income.id ?? Date.now(),
+        },
+        ...prev.recurringIncome,
+      ],
     }));
   };
 
   const editRecurringIncome = (updatedIncome) => {
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: (prev.recurringIncome || []).map((inc) =>
-        inc.id === updatedIncome.id ? updatedIncome : inc
+      recurringIncome: prev.recurringIncome.map((income) =>
+        income.id === updatedIncome.id
+          ? updatedIncome
+          : income
       ),
     }));
   };
@@ -71,23 +130,36 @@ export function BalanceProvider({ children }) {
   const removeRecurringIncome = (id) => {
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: (prev.recurringIncome || []).filter((inc) => inc.id !== id),
+      recurringIncome: prev.recurringIncome.filter(
+        (income) => income.id !== id
+      ),
     }));
   };
 
-  // --- GASTOS RECURRENTES ---
-  const createRecurringExpense = (newExpense) => {
+  // ------------------------
+  // GASTOS RECURRENTES
+  // ------------------------
+
+  const createRecurringExpense = (expense) => {
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: [newExpense, ...(prev.recurringExpense || [])],
+      recurringExpense: [
+        {
+          ...expense,
+          id: expense.id ?? Date.now(),
+        },
+        ...prev.recurringExpense,
+      ],
     }));
   };
 
   const editRecurringExpense = (updatedExpense) => {
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: (prev.recurringExpense || []).map((exp) =>
-        exp.id === updatedExpense.id ? updatedExpense : exp
+      recurringExpense: prev.recurringExpense.map((expense) =>
+        expense.id === updatedExpense.id
+          ? updatedExpense
+          : expense
       ),
     }));
   };
@@ -95,7 +167,41 @@ export function BalanceProvider({ children }) {
   const removeRecurringExpense = (id) => {
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: (prev.recurringExpense || []).filter((exp) => exp.id !== id),
+      recurringExpense: prev.recurringExpense.filter(
+        (expense) => expense.id !== id
+      ),
+    }));
+  };
+
+  // ------------------------
+  // OBJETIVO DE AHORRO
+  // ------------------------
+
+  const setDefaultTargetSavings = (amount) => {
+    const value = Number(amount);
+
+    setBalance((prev) => ({
+      ...prev,
+      defaultTargetSavings:
+        Number.isFinite(value) && value >= 0
+          ? value
+          : prev.defaultTargetSavings,
+    }));
+  };
+
+  const setMonthlyTargetSavings = (year, month, amount) => {
+    const value = Number(amount);
+    const key = `${year}-${month}`;
+
+    setBalance((prev) => ({
+      ...prev,
+      monthlyTargets: {
+        ...prev.monthlyTargets,
+        [key]:
+          Number.isFinite(value) && value >= 0
+            ? value
+            : prev.monthlyTargets[key],
+      },
     }));
   };
 
@@ -103,15 +209,25 @@ export function BalanceProvider({ children }) {
     <BalanceContext.Provider
       value={{
         balance,
+
+        // Movimientos
         createMovement,
         editMovement,
         removeMovement,
+
+        // Ingresos recurrentes
         createRecurringIncome,
         editRecurringIncome,
         removeRecurringIncome,
+
+        // Gastos recurrentes
         createRecurringExpense,
         editRecurringExpense,
         removeRecurringExpense,
+
+        // Objetivos
+        setDefaultTargetSavings,
+        setMonthlyTargetSavings,
       }}
     >
       {children}
@@ -121,8 +237,12 @@ export function BalanceProvider({ children }) {
 
 export function useBalance() {
   const context = useContext(BalanceContext);
+
   if (!context) {
-    throw new Error("useBalance debe usarse dentro de un BalanceProvider");
+    throw new Error(
+      "useBalance debe usarse dentro de un BalanceProvider"
+    );
   }
+
   return context;
 }

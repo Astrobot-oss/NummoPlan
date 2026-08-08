@@ -27,27 +27,38 @@ const categories = {
 };
 
 export default function MovementModal({
-  movement,
+  movement = null,
   onSubmit,
 }) {
   const [type, setType] = useState("expense");
   const [category, setCategory] = useState("Alimentación");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  useEffect(() => {
-  if (movement) {
-    setType(movement.type);
-    setCategory(movement.category);
-    setAmount(movement.amount);
-    setDescription(movement.description || "");
-    return;
-  }
 
-  setType("expense");
-  setCategory("Alimentación");
-  setAmount("");
-  setDescription("");
-}, [movement]);
+  useEffect(() => {
+    if (movement) {
+      const movementType =
+        movement.type === "income" ? "income" : "expense";
+
+      setType(movementType);
+      setCategory(
+        movement.category || categories[movementType][0]
+      );
+      setAmount(
+        movement.amount !== undefined
+          ? String(movement.amount)
+          : ""
+      );
+      setDescription(movement.description || "");
+
+      return;
+    }
+
+    setType("expense");
+    setCategory("Alimentación");
+    setAmount("");
+    setDescription("");
+  }, [movement]);
 
   function handleTypeChange(newType) {
     setType(newType);
@@ -57,14 +68,20 @@ export default function MovementModal({
   function handleSubmit(e) {
     e.preventDefault();
 
+    const numericAmount = Number(amount);
+
+    if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+      return;
+    }
+
     onSubmit({
-  id: movement?.id ?? Date.now(),
-  type,
-  category,
-  amount: Number(amount),
-  description,
-  date: movement?.date ?? new Date().toISOString(),
-});
+      id: movement?.id ?? crypto.randomUUID(),
+      type,
+      category,
+      amount: numericAmount,
+      description: description.trim(),
+      date: movement?.date ?? new Date().toISOString(),
+    });
   }
 
   return (
@@ -73,6 +90,8 @@ export default function MovementModal({
       category={category}
       amount={amount}
       description={description}
+      categories={categories[type]}
+      isEditing={Boolean(movement)}
       onTypeChange={handleTypeChange}
       onCategoryChange={setCategory}
       onAmountChange={setAmount}

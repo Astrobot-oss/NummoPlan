@@ -15,21 +15,20 @@ import { RecurringIncomeModal } from "../features/balance/RecurringIncomeModal";
 import RecurringExpenseCard from "../features/balance/RecurringExpenseCard";
 import { RecurringExpenseModal } from "../features/balance/RecurringExpenseModal";
 import MovementModal from "../features/balance/MovementModal";
-import { getBalanceSummary } from "../domain/balanceCalculations";
-import { generateMonthlyInsights } from "../domain/insightsCalculations";
 import ExpenseBreakdownCard from "../features/balance/ExpenseBreakdownCard";
+import { MonthlySavingsChart } from "../features/balance/MonthlySavingsChart";
+import { AccumulatedSavingsChart } from "../features/balance/AccumulatedSavingsChart";
+
+import {
+  getBalanceSummary,
+  getHistoricalStats,
+} from "../domain/balanceCalculations";
+
+import { generateMonthlyInsights } from "../domain/insightsCalculations";
 
 export default function Balance() {
-  const balanceContext = useBalance();
-
-  // Protección por si el contexto o balance tardan en cargar o vienen vacíos
-  const balance = balanceContext?.balance || {
-    movements: [],
-    recurringIncome: [],
-    recurringExpense: [],
-  };
-
   const {
+    balance,
     createMovement,
     editMovement,
     removeMovement,
@@ -39,9 +38,15 @@ export default function Balance() {
     createRecurringExpense,
     editRecurringExpense,
     removeRecurringExpense,
-  } = balanceContext || {};
+  } = useBalance();
 
-  const summary = getBalanceSummary(balance);
+  const safeBalance = balance || {
+    movements: [],
+    recurringIncome: [],
+    recurringExpense: [],
+  };
+
+  const [targetSavings, setTargetSavings] = useState(300);
 
   const [showRecurringIncomeModal, setShowRecurringIncomeModal] =
     useState(false);
@@ -70,9 +75,18 @@ export default function Balance() {
   const [recurringExpenseToDelete, setRecurringExpenseToDelete] =
     useState(null);
 
-  const [targetSavings, setTargetSavings] = useState(300);
+  const summary = getBalanceSummary(safeBalance);
 
-  const insights = generateMonthlyInsights(balance, targetSavings);
+  const historicalData = getHistoricalStats(
+    safeBalance,
+    6,
+    targetSavings
+  );
+
+  const insights = generateMonthlyInsights(
+    safeBalance,
+    targetSavings
+  );
 
   function handleNewMovement() {
     setEditingMovement(null);
@@ -80,8 +94,7 @@ export default function Balance() {
   }
 
   return (
-    <div className="space-y-8">
-
+    <div>
       <PageHeader
         title="Balance"
         description="Comprende realmente qué ocurre con tu dinero."
@@ -106,8 +119,18 @@ export default function Balance() {
             onTargetChange={setTargetSavings}
           />
 
+          <div className="grid grid-cols-1 gap-6">
+            <MonthlySavingsChart
+              historicalData={historicalData}
+            />
+
+            <AccumulatedSavingsChart
+              historicalData={historicalData}
+            />
+          </div>
+
           <TransactionsHistory
-            movements={balance.movements}
+            movements={safeBalance.movements}
             onEdit={(movement) => {
               setEditingMovement(movement);
               setShowMovementModal(true);
@@ -122,7 +145,7 @@ export default function Balance() {
         <div className="space-y-6">
 
           <RecurringIncomeCard
-            recurringIncome={balance.recurringIncome}
+            recurringIncome={safeBalance.recurringIncome}
             onAdd={() => {
               setEditingRecurringIncome(null);
               setShowRecurringIncomeModal(true);
@@ -137,7 +160,7 @@ export default function Balance() {
           />
 
           <RecurringExpenseCard
-            recurringExpense={balance.recurringExpense}
+            recurringExpense={safeBalance.recurringExpense}
             onAdd={() => {
               setEditingRecurringExpense(null);
               setShowRecurringExpenseModal(true);
@@ -150,10 +173,16 @@ export default function Balance() {
               setRecurringExpenseToDelete(id);
             }}
           />
-          <ExpenseBreakdownCard movements={balance.movements} />
+
+          <ExpenseBreakdownCard
+            movements={safeBalance.movements}
+          />
+
         </div>
 
       </div>
+
+      {/* INGRESO RECURRENTE */}
 
       <Modal
         open={showRecurringIncomeModal}
@@ -170,9 +199,9 @@ export default function Balance() {
           }}
           onSubmit={(income) => {
             if (editingRecurringIncome) {
-              editRecurringIncome?.(income);
+              editRecurringIncome(income);
             } else {
-              createRecurringIncome?.(income);
+              createRecurringIncome(income);
             }
 
             setEditingRecurringIncome(null);
@@ -180,6 +209,8 @@ export default function Balance() {
           }}
         />
       </Modal>
+
+      {/* GASTO RECURRENTE */}
 
       <Modal
         open={showRecurringExpenseModal}
@@ -196,9 +227,9 @@ export default function Balance() {
           }}
           onSubmit={(expense) => {
             if (editingRecurringExpense) {
-              editRecurringExpense?.(expense);
+              editRecurringExpense(expense);
             } else {
-              createRecurringExpense?.(expense);
+              createRecurringExpense(expense);
             }
 
             setEditingRecurringExpense(null);
@@ -206,6 +237,8 @@ export default function Balance() {
           }}
         />
       </Modal>
+
+      {/* MOVIMIENTO */}
 
       <Modal
         open={showMovementModal}
@@ -218,9 +251,9 @@ export default function Balance() {
           movement={editingMovement}
           onSubmit={(movement) => {
             if (editingMovement) {
-              editMovement?.(movement);
+              editMovement(movement);
             } else {
-              createMovement?.(movement);
+              createMovement(movement);
             }
 
             setEditingMovement(null);
@@ -229,33 +262,39 @@ export default function Balance() {
         />
       </Modal>
 
+      {/* CONFIRMAR ELIMINACIÓN DE MOVIMIENTO */}
+
       <ConfirmModal
         open={movementToDelete !== null}
         onClose={() => setMovementToDelete(null)}
         onConfirm={() => {
-          removeMovement?.(movementToDelete);
+          removeMovement(movementToDelete);
           setMovementToDelete(null);
         }}
         title="Eliminar movimiento"
         message="Esta acción no se puede deshacer. ¿Quieres eliminar este movimiento?"
       />
 
+      {/* CONFIRMAR ELIMINACIÓN DE INGRESO */}
+
       <ConfirmModal
         open={recurringIncomeToDelete !== null}
         onClose={() => setRecurringIncomeToDelete(null)}
         onConfirm={() => {
-          removeRecurringIncome?.(recurringIncomeToDelete);
+          removeRecurringIncome(recurringIncomeToDelete);
           setRecurringIncomeToDelete(null);
         }}
         title="Eliminar ingreso recurrente"
         message="Esta acción no se puede deshacer. ¿Quieres eliminar este ingreso recurrente?"
       />
 
+      {/* CONFIRMAR ELIMINACIÓN DE GASTO */}
+
       <ConfirmModal
         open={recurringExpenseToDelete !== null}
         onClose={() => setRecurringExpenseToDelete(null)}
         onConfirm={() => {
-          removeRecurringExpense?.(recurringExpenseToDelete);
+          removeRecurringExpense(recurringExpenseToDelete);
           setRecurringExpenseToDelete(null);
         }}
         title="Eliminar gasto recurrente"
