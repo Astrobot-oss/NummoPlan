@@ -12,14 +12,16 @@ export function getBalanceStats(balance = {}) {
   const totalIncome = movements
     .filter((movement) => movement.type === "income")
     .reduce(
-      (total, movement) => total + Number(movement.amount || 0),
+      (total, movement) =>
+        total + Number(movement.amount || 0),
       0
     );
 
   const totalExpenses = movements
     .filter((movement) => movement.type === "expense")
     .reduce(
-      (total, movement) => total + Number(movement.amount || 0),
+      (total, movement) =>
+        total + Number(movement.amount || 0),
       0
     );
 
@@ -39,29 +41,35 @@ export function getBalanceStats(balance = {}) {
 }
 
 // ------------------------------------------------------------
-// RESUMEN DEL BALANCE
+// RESUMEN DEL MES ACTUAL
 // ------------------------------------------------------------
 
 export function getBalanceSummary(balance = {}) {
-  const stats = getBalanceStats(balance);
+  const now = new Date();
+
+  const year = now.getFullYear();
+  const month = now.getMonth();
+
+  // Incluye movimientos manuales + movimientos recurrentes
+  // que correspondan al mes actual.
+  const stats = getMonthlyStats(
+    balance,
+    year,
+    month
+  );
+
+  const availableToInvest = Math.max(
+    0,
+    stats.savings
+  );
 
   return {
     totalIncome: stats.totalIncome,
     totalExpenses: stats.totalExpenses,
     savings: stats.savings,
     savingsRate: stats.savingsRate,
-    availableToInvest: getAvailableToInvest(balance),
+    availableToInvest,
   };
-}
-
-// ------------------------------------------------------------
-// DINERO DISPONIBLE PARA INVERTIR
-// ------------------------------------------------------------
-
-export function getAvailableToInvest(balance = {}) {
-  const { savings } = getBalanceStats(balance);
-
-  return Math.max(0, savings);
 }
 
 // ------------------------------------------------------------
@@ -85,7 +93,8 @@ export function getIncomeByCategory(balance = {}) {
   (balance?.movements || [])
     .filter((movement) => movement.type === "income")
     .forEach((movement) => {
-      const category = movement.category || "Otros";
+      const category =
+        movement.category || "Otros";
 
       result[category] =
         (result[category] || 0) +
@@ -105,7 +114,8 @@ export function getExpenseByCategory(balance = {}) {
   (balance?.movements || [])
     .filter((movement) => movement.type === "expense")
     .forEach((movement) => {
-      const category = movement.category || "Otros";
+      const category =
+        movement.category || "Otros";
 
       result[category] =
         (result[category] || 0) +
@@ -119,14 +129,20 @@ export function getExpenseByCategory(balance = {}) {
 // GASTOS POR CATEGORÍA - FORMATO PARA GRÁFICAS
 // ------------------------------------------------------------
 
-export function getExpensesByCategory(movements = []) {
+export function getExpensesByCategory(
+  movements = []
+) {
   const categories = {};
   let totalExpenses = 0;
 
   movements
-    .filter((movement) => movement.type === "expense")
+    .filter(
+      (movement) => movement.type === "expense"
+    )
     .forEach((movement) => {
-      const category = movement.category || "Otros";
+      const category =
+        movement.category || "Otros";
+
       const amount = Math.abs(
         Number(movement.amount || 0)
       );
@@ -144,7 +160,10 @@ export function getExpensesByCategory(movements = []) {
       percentage:
         totalExpenses > 0
           ? Number(
-              ((amount / totalExpenses) * 100).toFixed(1)
+              (
+                (amount / totalExpenses) *
+                100
+              ).toFixed(1)
             )
           : 0,
     }))
@@ -160,8 +179,11 @@ export function getExpensesByCategory(movements = []) {
 // MAYOR CATEGORÍA DE GASTO
 // ------------------------------------------------------------
 
-export function getLargestExpenseCategory(balance = {}) {
-  const categories = getExpenseByCategory(balance);
+export function getLargestExpenseCategory(
+  balance = {}
+) {
+  const categories =
+    getExpenseByCategory(balance);
 
   let category = null;
   let amount = 0;
@@ -192,7 +214,8 @@ export function getRecentMovements(
   return [...(balance?.movements || [])]
     .sort(
       (a, b) =>
-        new Date(b.date) - new Date(a.date)
+        new Date(b.date) -
+        new Date(a.date)
     )
     .slice(0, limit);
 }
@@ -201,8 +224,12 @@ export function getRecentMovements(
 // TOTAL INGRESOS RECURRENTES
 // ------------------------------------------------------------
 
-export function getRecurringIncomeTotal(balance = {}) {
-  return (balance?.recurringIncome || []).reduce(
+export function getRecurringIncomeTotal(
+  balance = {}
+) {
+  return (
+    balance?.recurringIncome || []
+  ).reduce(
     (total, income) =>
       total + Number(income.amount || 0),
     0
@@ -219,8 +246,10 @@ export function getMovementsByMonth(
   month
 ) {
   const movements = balance?.movements || [];
+
   const recurringIncome =
     balance?.recurringIncome || [];
+
   const recurringExpense =
     balance?.recurringExpense || [];
 
@@ -228,20 +257,23 @@ export function getMovementsByMonth(
   // 1. MOVIMIENTOS MANUALES
   // ----------------------------------------------------------
 
-  const manualMovements = movements.filter(
-    (movement) => {
+  const manualMovements =
+    movements.filter((movement) => {
       if (!movement.date) {
         return false;
       }
 
       const date = new Date(movement.date);
 
+      if (Number.isNaN(date.getTime())) {
+        return false;
+      }
+
       return (
         date.getFullYear() === year &&
         date.getMonth() === month
       );
-    }
-  );
+    });
 
   // ----------------------------------------------------------
   // 2. DÍA HASTA EL QUE CONTABILIZAMOS
@@ -338,7 +370,10 @@ export function getMovementsByMonth(
   // ==========================================================
 
   recurringIncome.forEach((item) => {
-    const amount = Number(item.amount || 0);
+    const amount = Number(
+      item.amount || 0
+    );
+
     const frequency =
       item.frequency || "monthly";
 
@@ -390,7 +425,8 @@ export function getMovementsByMonth(
       );
 
       const secondDay = Number(
-        item.secondDay || firstDay + 14
+        item.secondDay ||
+          firstDay + 14
       );
 
       if (currentDay >= firstDay) {
@@ -482,7 +518,10 @@ export function getMovementsByMonth(
   // ==========================================================
 
   recurringExpense.forEach((item) => {
-    const amount = Number(item.amount || 0);
+    const amount = Number(
+      item.amount || 0
+    );
+
     const frequency =
       item.frequency || "monthly";
 
@@ -511,7 +550,8 @@ export function getMovementsByMonth(
       );
 
       const secondDay = Number(
-        item.secondDay || firstDay + 14
+        item.secondDay ||
+          firstDay + 14
       );
 
       if (currentDay >= firstDay) {
@@ -636,77 +676,27 @@ export function getMonthlyStats(
 export function getHistoricalStats(
   balance = {},
   maxMonths = 6,
-  currentTargetSavings = 300
+  currentTargetPath = 300
 ) {
-  const movements = balance?.movements || [];
+  const availableMonths =
+    getAvailableBalanceMonths(balance);
 
-  const recurringIncome =
-    balance?.recurringIncome || [];
+  const selectedMonths =
+    availableMonths.slice(0, maxMonths);
 
-  const recurringExpense =
-    balance?.recurringExpense || [];
-
-  // Sin ningún tipo de dato no mostramos histórico.
-  if (
-    movements.length === 0 &&
-    recurringIncome.length === 0 &&
-    recurringExpense.length === 0
-  ) {
-    return [];
-  }
-
-  // ----------------------------------------------------------
-  // FECHA DEL MOVIMIENTO MANUAL MÁS ANTIGUO
-  // ----------------------------------------------------------
-
-  const dates = movements
-    .map((movement) => {
-      const value =
-        movement.date ||
-        movement.createdAt;
-
-      if (!value) {
-        return null;
-      }
-
-      const date = new Date(value);
-
-      return Number.isNaN(date.getTime())
-        ? null
-        : date;
-    })
-    .filter(Boolean);
-
-  const oldestDate =
-    dates.length > 0
-      ? new Date(Math.min(...dates))
-      : null;
-
-  // ----------------------------------------------------------
-  // CONSTRUIR HISTÓRICO
-  // ----------------------------------------------------------
-
-  const history = [];
   const now = new Date();
 
-  let current = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    1
-  );
+  return selectedMonths
+    .slice()
+    .reverse()
+    .map(({ year, month }) => {
+      const monthlyMovements =
+        getMovementsByMonth(
+          balance,
+          year,
+          month
+        );
 
-  while (history.length < maxMonths) {
-    const year = current.getFullYear();
-    const month = current.getMonth();
-
-    const monthlyMovements =
-      getMovementsByMonth(
-        balance,
-        year,
-        month
-      );
-
-    if (monthlyMovements.length > 0) {
       const stats = getBalanceStats({
         ...balance,
         movements: monthlyMovements,
@@ -718,7 +708,7 @@ export function getHistoricalStats(
 
       const targetSavings =
         isCurrentMonth
-          ? currentTargetSavings
+          ? currentTargetPath
           : (
               balance?.monthlyTargets?.[
                 `${year}-${month}`
@@ -727,43 +717,176 @@ export function getHistoricalStats(
               300
             );
 
-      history.unshift({
+      return {
         year,
         month,
 
-        monthName:
-          current.toLocaleString(
-            "es-ES",
-            { month: "short" }
-          ),
+        monthName: new Date(
+          year,
+          month,
+          1
+        ).toLocaleString("es-ES", {
+          month: "short",
+        }),
 
         ...stats,
 
         targetSavings,
+      };
+    });
+}
+
+// ============================================================
+// MESES CON ACTIVIDAD
+// ============================================================
+
+export function getAvailableBalanceMonths(
+  balance = {}
+) {
+  const movements =
+    balance?.movements || [];
+
+  const monthsMap = new Map();
+
+  const now = new Date();
+
+  const currentYear =
+    now.getFullYear();
+
+  const currentMonth =
+    now.getMonth();
+
+  // --------------------------------------------------
+  // 1. Detectar el movimiento manual más antiguo
+  // --------------------------------------------------
+
+  let earliestDate = null;
+
+  movements.forEach((movement) => {
+    if (!movement.date) return;
+
+    const date = new Date(
+      movement.date
+    );
+
+    if (Number.isNaN(date.getTime())) {
+      return;
+    }
+
+    if (
+      !earliestDate ||
+      date < earliestDate
+    ) {
+      earliestDate = date;
+    }
+  });
+
+  // --------------------------------------------------
+  // 2. Determinar desde qué mes comprobamos actividad
+  // --------------------------------------------------
+  //
+  // Si existen movimientos manuales:
+  // empezamos desde su mes más antiguo.
+  //
+  // Así podemos encontrar meses históricos
+  // que no tengan movimientos manuales pero sí
+  // actividad generada por recurrencias.
+  //
+  // Si no existen movimientos manuales:
+  // solo comprobamos el mes actual.
+  //
+  // Esto es necesario porque actualmente las
+  // recurrencias no tienen una fecha de inicio.
+  // --------------------------------------------------
+
+  const startYear =
+    earliestDate
+      ? earliestDate.getFullYear()
+      : currentYear;
+
+  const startMonth =
+    earliestDate
+      ? earliestDate.getMonth()
+      : currentMonth;
+
+  // --------------------------------------------------
+  // 3. Recorrer todos los meses hasta el actual
+  // --------------------------------------------------
+  //
+  // Para cada mes utilizamos getMovementsByMonth().
+  //
+  // Esto incluye:
+  //
+  // - movimientos manuales
+  // - ingresos recurrentes
+  // - gastos recurrentes
+  // - quincenales
+  // - trimestrales
+  // - anuales
+  // - pagas extra
+  //
+  // Por tanto, un mes histórico producido únicamente
+  // por recurrencias también aparece.
+  // --------------------------------------------------
+
+  const startDate = new Date(
+    startYear,
+    startMonth,
+    1
+  );
+
+  const endDate = new Date(
+    currentYear,
+    currentMonth,
+    1
+  );
+
+  const cursor = new Date(
+    startDate
+  );
+
+  while (cursor <= endDate) {
+    const year =
+      cursor.getFullYear();
+
+    const month =
+      cursor.getMonth();
+
+    const monthlyMovements =
+      getMovementsByMonth(
+        balance,
+        year,
+        month
+      );
+
+    if (
+      monthlyMovements.length > 0
+    ) {
+      const key =
+        `${year}-${month}`;
+
+      monthsMap.set(key, {
+        year,
+        month,
       });
     }
 
-    current.setMonth(
-      current.getMonth() - 1
+    cursor.setMonth(
+      cursor.getMonth() + 1
     );
-
-    // Si hemos pasado el movimiento manual
-    // más antiguo y no existen recurrentes,
-    // no tiene sentido continuar.
-    if (
-      oldestDate &&
-      current <
-        new Date(
-          oldestDate.getFullYear(),
-          oldestDate.getMonth(),
-          1
-        ) &&
-      recurringIncome.length === 0 &&
-      recurringExpense.length === 0
-    ) {
-      break;
-    }
   }
 
-  return history;
+  // --------------------------------------------------
+  // 4. Ordenar del más reciente al más antiguo
+  // --------------------------------------------------
+
+  return Array.from(
+    monthsMap.values()
+  ).sort((a, b) => {
+    if (a.year !== b.year) {
+      return b.year - a.year;
+    }
+
+    return b.month - a.month;
+  });
 }

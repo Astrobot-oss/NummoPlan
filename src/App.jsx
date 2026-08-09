@@ -12,6 +12,7 @@ import DebtDetail from "./pages/DebtDetail";
 import Balance from "./pages/Balance";
 import { useAutoRefreshDate } from "./hooks/useAutoRefreshDate";
 import { BalanceProvider } from "./context/BalanceContext"; // <-- Importa tu proveedor
+import BalanceDetail from "./pages/BalanceDetail";
 
 export function App() {
   useAutoRefreshDate(); 
@@ -22,6 +23,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/balance" element={<Balance />} />
+          <Route path="/balance/:year/:month" element={<BalanceDetail />} />
           <Route path="/objetivos" element={<Goals />} />
           <Route path="/inversiones" element={<Investments />} />
           <Route path="/inversiones/:id" element={<InvestmentDetail />} />

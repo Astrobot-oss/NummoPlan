@@ -16,8 +16,7 @@ export default function TransactionsHistory({
         );
 
   return (
-    <div className="rounded-3xl bg-white p-6 shadow-sm">
-
+    <div>
       <h3 className="text-lg font-semibold">
         Historial de movimientos
       </h3>
@@ -27,8 +26,8 @@ export default function TransactionsHistory({
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
-
         <button
+          type="button"
           onClick={() => setFilter("all")}
           className={`rounded-xl px-4 py-2 text-sm transition ${
             filter === "all"
@@ -40,6 +39,7 @@ export default function TransactionsHistory({
         </button>
 
         <button
+          type="button"
           onClick={() => setFilter("income")}
           className={`rounded-xl px-4 py-2 text-sm transition ${
             filter === "income"
@@ -51,6 +51,7 @@ export default function TransactionsHistory({
         </button>
 
         <button
+          type="button"
           onClick={() => setFilter("expense")}
           className={`rounded-xl px-4 py-2 text-sm transition ${
             filter === "expense"
@@ -60,54 +61,49 @@ export default function TransactionsHistory({
         >
           Gastos
         </button>
-
       </div>
 
       <div className="mt-6">
-
         {filteredMovements.length === 0 ? (
-
           <div className="rounded-2xl border border-dashed border-slate-300 py-10 text-center">
-
             <p className="text-slate-500">
               Todavía no hay movimientos registrados.
             </p>
-
           </div>
-
         ) : (
-
           <div className="space-y-3">
-
             {filteredMovements.map((movement) => (
-
               <div
                 key={movement.id}
                 className="rounded-2xl border border-slate-200 p-4"
               >
-
                 <div className="flex items-start justify-between gap-4">
-
                   <div className="flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span
+                        className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
+                          movement.type === "income"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {movement.type === "income"
+                          ? "Ingreso"
+                          : "Gasto"}
+                      </span>
 
-                    <span
-                      className={`inline-block rounded-full px-2 py-1 text-xs font-medium ${
-                        movement.type === "income"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {movement.type === "income"
-                        ? "Ingreso"
-                        : "Gasto"}
-                    </span>
+                      {movement.recurring && (
+                        <span className="inline-block rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
+                          Recurrente
+                        </span>
+                      )}
+                    </div>
 
                     <p className="mt-3 font-semibold">
                       {movement.category}
                     </p>
 
                     <div className="space-y-1">
-
                       <p className="text-sm text-slate-500">
                         {movement.description ||
                           "Sin descripción"}
@@ -122,28 +118,27 @@ export default function TransactionsHistory({
                           year: "numeric",
                         })}
                       </p>
-
                     </div>
-
                   </div>
 
                   <div className="flex flex-col items-end gap-2">
-
-                    <ActionMenu
-                      items={[
-                        {
-                          label: "Editar",
-                          onClick: () =>
-                            onEdit?.(movement),
-                        },
-                        {
-                          label: "Eliminar",
-                          danger: true,
-                          onClick: () =>
-                            onDelete?.(movement.id),
-                        },
-                      ]}
-                    />
+                    {!movement.recurring && (
+                      <ActionMenu
+                        items={[
+                          {
+                            label: "Editar",
+                            onClick: () =>
+                              onEdit?.(movement),
+                          },
+                          {
+                            label: "Eliminar",
+                            danger: true,
+                            onClick: () =>
+                              onDelete?.(movement.id),
+                          },
+                        ]}
+                      />
+                    )}
 
                     <p
                       className={`text-lg font-bold ${
@@ -155,26 +150,18 @@ export default function TransactionsHistory({
                       {movement.type === "income"
                         ? "+"
                         : "-"}
-                      {movement.amount.toLocaleString(
-                        "es-ES"
-                      )}{" "}
+                      {Number(
+                        movement.amount || 0
+                      ).toLocaleString("es-ES")}{" "}
                       €
                     </p>
-
                   </div>
-
                 </div>
-
               </div>
-
             ))}
-
           </div>
-
         )}
-
       </div>
-
     </div>
   );
 }

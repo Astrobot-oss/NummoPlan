@@ -14,21 +14,28 @@ const initialData = {
 
 function normalizeBalance(data) {
   return {
-    movements: Array.isArray(data?.movements) ? data.movements : [],
+    movements: Array.isArray(data?.movements)
+      ? data.movements
+      : [],
+
     recurringIncome: Array.isArray(data?.recurringIncome)
       ? data.recurringIncome
       : [],
+
     recurringExpense: Array.isArray(data?.recurringExpense)
       ? data.recurringExpense
       : [],
+
     monthlyTargets:
       data?.monthlyTargets &&
       typeof data.monthlyTargets === "object" &&
       !Array.isArray(data.monthlyTargets)
         ? data.monthlyTargets
         : {},
+
     defaultTargetSavings:
-      Number(data?.defaultTargetSavings) >= 0
+      Number.isFinite(Number(data?.defaultTargetSavings)) &&
+      Number(data.defaultTargetSavings) >= 0
         ? Number(data.defaultTargetSavings)
         : 300,
   };
@@ -72,7 +79,9 @@ export function BalanceProvider({ children }) {
         {
           ...movement,
           id: movement.id ?? Date.now(),
-          date: movement.date ?? new Date().toISOString(),
+          date:
+            movement.date ??
+            new Date().toISOString(),
         },
         ...prev.movements,
       ],
@@ -119,10 +128,11 @@ export function BalanceProvider({ children }) {
   const editRecurringIncome = (updatedIncome) => {
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: prev.recurringIncome.map((income) =>
-        income.id === updatedIncome.id
-          ? updatedIncome
-          : income
+      recurringIncome: prev.recurringIncome.map(
+        (income) =>
+          income.id === updatedIncome.id
+            ? updatedIncome
+            : income
       ),
     }));
   };
@@ -156,10 +166,11 @@ export function BalanceProvider({ children }) {
   const editRecurringExpense = (updatedExpense) => {
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: prev.recurringExpense.map((expense) =>
-        expense.id === updatedExpense.id
-          ? updatedExpense
-          : expense
+      recurringExpense: prev.recurringExpense.map(
+        (expense) =>
+          expense.id === updatedExpense.id
+            ? updatedExpense
+            : expense
       ),
     }));
   };
@@ -180,16 +191,21 @@ export function BalanceProvider({ children }) {
   const setDefaultTargetSavings = (amount) => {
     const value = Number(amount);
 
+    if (!Number.isFinite(value) || value < 0) {
+      return;
+    }
+
     setBalance((prev) => ({
       ...prev,
-      defaultTargetSavings:
-        Number.isFinite(value) && value >= 0
-          ? value
-          : prev.defaultTargetSavings,
+      defaultTargetSavings: value,
     }));
   };
 
-  const setMonthlyTargetSavings = (year, month, amount) => {
+  const setMonthlyTargetSavings = (
+    year,
+    month,
+    amount
+  ) => {
     const value = Number(amount);
     const key = `${year}-${month}`;
 
@@ -204,6 +220,10 @@ export function BalanceProvider({ children }) {
       },
     }));
   };
+
+  // ------------------------
+  // CONTEXT
+  // ------------------------
 
   return (
     <BalanceContext.Provider
