@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 import PageHeader from "../components/PageHeader";
 import PrimaryButton from "../components/PrimaryButton";
@@ -49,6 +48,7 @@ export default function Balance() {
     movements: [],
     recurringIncome: [],
     recurringExpense: [],
+    monthlyTargets: {},
     defaultTargetSavings: 300,
   };
 
@@ -192,10 +192,15 @@ export default function Balance() {
 
       {/* ==================================================
           1. RESUMEN
+          La tarjeta completa funciona como entrada
+          al detalle del mes actual.
       ================================================== */}
 
       <section>
-        <BalanceSummaryCard summary={summary} />
+        <BalanceSummaryCard
+  summary={summary}
+  detailPath={currentMonthDetailPath}
+/>
       </section>
 
       {/* ==================================================
@@ -253,14 +258,14 @@ export default function Balance() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-
           {/* ==================================================
               DESGLOSE DE GASTOS
+
+              Ya NO contiene ningún enlace al detail.
           ================================================== */}
 
           <ExpenseBreakdownSummaryCard
             movements={currentMonthMovements}
-            detailPath={currentMonthDetailPath}
           />
 
           {/* ==================================================
@@ -268,7 +273,6 @@ export default function Balance() {
           ================================================== */}
 
           <div className="space-y-6">
-
             <RecurringIncomeCard
               recurringIncome={
                 safeBalance.recurringIncome
@@ -302,7 +306,6 @@ export default function Balance() {
                 setRecurringExpenseToDelete(id);
               }}
             />
-
           </div>
         </div>
       </section>
@@ -312,8 +315,7 @@ export default function Balance() {
       ================================================== */}
 
       <section>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-
+        <div className="mb-4">
           <div>
             <h2 className="text-xl font-semibold text-slate-900">
               Actividad reciente
@@ -323,20 +325,10 @@ export default function Balance() {
               Tus últimos movimientos registrados este mes.
             </p>
           </div>
-
-          <Link
-            to={currentMonthDetailPath}
-            className="text-sm font-medium text-orange-600 transition hover:text-orange-700"
-          >
-            Ver historial completo →
-          </Link>
-
         </div>
 
         {recentMovements.length === 0 ? (
-
           <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-10 text-center">
-
             <p className="text-sm text-slate-500">
               Todavía no hay movimientos registrados este mes.
             </p>
@@ -348,25 +340,17 @@ export default function Balance() {
             >
               Registrar movimiento
             </button>
-
           </div>
-
         ) : (
-
           <div className="space-y-3">
-
             {recentMovements.map(
               (movement) => (
-
                 <div
                   key={movement.id}
                   className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4"
                 >
-
                   <div className="min-w-0">
-
                     <div className="flex flex-wrap items-center gap-2">
-
                       <span
                         className={`rounded-full px-2 py-1 text-xs font-medium ${
                           movement.type === "income"
@@ -384,7 +368,6 @@ export default function Balance() {
                           ↻ Recurrente
                         </span>
                       )}
-
                     </div>
 
                     <p className="mt-2 truncate font-semibold text-slate-900">
@@ -394,13 +377,12 @@ export default function Balance() {
                     <p className="mt-1 truncate text-sm text-slate-500">
                       {movement.description ||
                         movement.concept ||
+                        movement.title ||
                         "Sin descripción"}
                     </p>
-
                   </div>
 
                   <div className="shrink-0 text-right">
-
                     <p
                       className={`font-bold ${
                         movement.type === "income"
@@ -428,29 +410,11 @@ export default function Balance() {
                         }
                       )}
                     </p>
-
                   </div>
-
                 </div>
-
               )
             )}
-
-            {currentMonthMovements.length > 5 && (
-              <div className="pt-1 text-center">
-                <Link
-                  to={currentMonthDetailPath}
-                  className="text-sm font-medium text-slate-500 hover:text-slate-700"
-                >
-                  Ver los{" "}
-                  {currentMonthMovements.length}{" "}
-                  movimientos del mes →
-                </Link>
-              </div>
-            )}
-
           </div>
-
         )}
       </section>
 

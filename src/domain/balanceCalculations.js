@@ -297,73 +297,147 @@ export function getMovementsByMonth(
 
   const automaticMovements = [];
 
+  function recurringHasStarted(item) {
+  if (!item?.startDate) {
+    return true;
+  }
+
+  const startDate = new Date(
+    `${item.startDate}T00:00:00`
+  );
+
+  if (Number.isNaN(startDate.getTime())) {
+    return true;
+  }
+
+  const startYear =
+    startDate.getFullYear();
+
+  const startMonth =
+    startDate.getMonth();
+
+  const startDay =
+    startDate.getDate();
+
+  if (year < startYear) {
+    return false;
+  }
+
+  if (
+    year === startYear &&
+    month < startMonth
+  ) {
+    return false;
+  }
+
+  if (
+    year === startYear &&
+    month === startMonth &&
+    currentDay < startDay
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
   // ----------------------------------------------------------
   // 3. CREAR MOVIMIENTO RECURRENTE
   // ----------------------------------------------------------
 
   function addAutomaticMovement({
-    item,
-    type,
-    day,
-    amount,
-    extraPay = false,
-  }) {
-    const numericDay = Number(day);
+  item,
+  type,
+  day,
+  amount,
+  extraPay = false,
+}) {
+  const numericDay = Number(day);
 
-    if (!numericDay || numericDay < 1) {
-      return;
-    }
-
-    // En el mes actual todavía no contamos
-    // movimientos cuya fecha no ha llegado.
-    if (currentDay < numericDay) {
-      return;
-    }
-
-    const safeDay = Math.min(
-      numericDay,
-      daysInMonth
-    );
-
-    automaticMovements.push({
-      id: [
-        "recurring",
-        type,
-        item.id,
-        year,
-        month,
-        safeDay,
-        extraPay ? "extra" : "normal",
-      ].join("-"),
-
-      type,
-
-      amount: Number(amount || 0),
-
-      category:
-        item.category ||
-        (type === "income"
-          ? "Ingreso recurrente"
-          : "Gasto recurrente"),
-
-      title: item.title || "",
-
-      description:
-        item.description ||
-        item.title ||
-        "",
-
-      date: new Date(
-        year,
-        month,
-        safeDay
-      ).toISOString(),
-
-      recurring: true,
-      recurringId: item.id,
-      extraPay,
-    });
+  if (!numericDay || numericDay < 1) {
+    return;
   }
+
+  // El movimiento todavía no ha llegado
+  // dentro del mes actual.
+  if (currentDay < numericDay) {
+    return;
+  }
+
+  // La recurrencia todavía no ha comenzado.
+  if (!recurringHasStarted(item)) {
+    return;
+  }
+
+  const startDate = item?.startDate
+    ? new Date(
+        `${item.startDate}T00:00:00`
+      )
+    : null;
+
+  // Si estamos en el mismo mes en que
+  // comienza la recurrencia, no generamos
+  // cargos anteriores a la fecha de inicio.
+  if (
+    startDate &&
+    !Number.isNaN(startDate.getTime()) &&
+    startDate.getFullYear() === year &&
+    startDate.getMonth() === month &&
+    numericDay < startDate.getDate()
+  ) {
+    return;
+  }
+
+  const safeDay = Math.min(
+    numericDay,
+    daysInMonth
+  );
+
+  automaticMovements.push({
+    id: [
+      "recurring",
+      type,
+      item.id,
+      year,
+      month,
+      safeDay,
+      extraPay
+        ? "extra"
+        : "normal",
+    ].join("-"),
+
+    type,
+
+    amount: Number(amount || 0),
+
+    category:
+      item.category ||
+      (
+        type === "income"
+          ? "Ingreso recurrente"
+          : "Gasto recurrente"
+      ),
+
+    title: item.title || "",
+
+    description:
+      item.description ||
+      item.title ||
+      "",
+
+    date: new Date(
+      year,
+      month,
+      safeDay
+    ).toISOString(),
+
+    recurring: true,
+
+    recurringId: item.id,
+
+    extraPay,
+  });
+}
 
   // ==========================================================
   // 4. INGRESOS RECURRENTES
