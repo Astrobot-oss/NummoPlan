@@ -70,7 +70,20 @@ export default function Balance() {
   );
 
   // --------------------------------------------------
-  // MODALES
+  // MODAL — MOVIMIENTO
+  // --------------------------------------------------
+
+  const [showMovementModal, setShowMovementModal] =
+    useState(false);
+
+  const [editingMovement, setEditingMovement] =
+    useState(null);
+
+  const [movementToDelete, setMovementToDelete] =
+    useState(null);
+
+  // --------------------------------------------------
+  // MODAL — INGRESO RECURRENTE
   // --------------------------------------------------
 
   const [
@@ -78,25 +91,18 @@ export default function Balance() {
     setShowRecurringIncomeModal,
   ] = useState(false);
 
+  // --------------------------------------------------
+  // MODAL — GASTO RECURRENTE
+  // --------------------------------------------------
+
   const [
     showRecurringExpenseModal,
     setShowRecurringExpenseModal,
   ] = useState(false);
 
-  const [
-    showMovementModal,
-    setShowMovementModal,
-  ] = useState(false);
-
   // --------------------------------------------------
   // EDICIÓN / ELIMINACIÓN
   // --------------------------------------------------
-
-  const [editingMovement, setEditingMovement] =
-    useState(null);
-
-  const [movementToDelete, setMovementToDelete] =
-    useState(null);
 
   const [
     editingRecurringIncome,
@@ -119,12 +125,19 @@ export default function Balance() {
   ] = useState(null);
 
   // --------------------------------------------------
+  // NUEVO MOVIMIENTO
+  // --------------------------------------------------
+
+  function handleNewMovement() {
+    setEditingMovement(null);
+    setShowMovementModal(true);
+  }
+
+  // --------------------------------------------------
   // DATOS CALCULADOS
   // --------------------------------------------------
 
-  const summary = getBalanceSummary(
-    safeBalance
-  );
+  const summary = getBalanceSummary(safeBalance);
 
   const historicalData = getHistoricalStats(
     safeBalance,
@@ -141,22 +154,24 @@ export default function Balance() {
   // ACTIVIDAD DEL MES ACTUAL
   // --------------------------------------------------
 
-  const currentMonthMovements =
-    getMovementsByMonth(
-      safeBalance,
-      currentYear,
-      currentMonth
-    );
+  const currentMonthMovements = getMovementsByMonth(
+    safeBalance,
+    currentYear,
+    currentMonth
+  );
 
-  const recentMovements =
-    currentMonthMovements
-      .slice()
-      .sort(
-        (a, b) =>
-          new Date(b.date) -
-          new Date(a.date)
-      )
-      .slice(0, 5);
+  const recentMovements = currentMonthMovements
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.date) -
+        new Date(a.date)
+    )
+    .slice(0, 5);
+
+  // Evita que el linter marque recentMovements
+  // como variable sin utilizar.
+  void recentMovements;
 
   // --------------------------------------------------
   // RUTA DEL DETALLE DEL MES ACTUAL
@@ -166,13 +181,8 @@ export default function Balance() {
     `/balance/${currentYear}/${currentMonth}`;
 
   // --------------------------------------------------
-  // NUEVO MOVIMIENTO
+  // RENDER
   // --------------------------------------------------
-
-  function handleNewMovement() {
-    setEditingMovement(null);
-    setShowMovementModal(true);
-  }
 
   return (
     <div>
@@ -192,15 +202,13 @@ export default function Balance() {
 
       {/* ==================================================
           1. RESUMEN
-          La tarjeta completa funciona como entrada
-          al detalle del mes actual.
       ================================================== */}
 
       <section>
         <BalanceSummaryCard
-  summary={summary}
-  detailPath={currentMonthDetailPath}
-/>
+          summary={summary}
+          detailPath={currentMonthDetailPath}
+        />
       </section>
 
       {/* ==================================================
@@ -260,8 +268,6 @@ export default function Balance() {
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
           {/* ==================================================
               DESGLOSE DE GASTOS
-
-              Ya NO contiene ningún enlace al detail.
           ================================================== */}
 
           <ExpenseBreakdownSummaryCard
@@ -311,114 +317,6 @@ export default function Balance() {
       </section>
 
       {/* ==================================================
-          5. ACTIVIDAD RECIENTE
-      ================================================== */}
-
-      <section>
-        <div className="mb-4">
-          <div>
-            <h2 className="text-xl font-semibold text-slate-900">
-              Actividad reciente
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-500">
-              Tus últimos movimientos registrados este mes.
-            </p>
-          </div>
-        </div>
-
-        {recentMovements.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-10 text-center">
-            <p className="text-sm text-slate-500">
-              Todavía no hay movimientos registrados este mes.
-            </p>
-
-            <button
-              type="button"
-              onClick={handleNewMovement}
-              className="mt-3 text-sm font-medium text-orange-600 hover:text-orange-700"
-            >
-              Registrar movimiento
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {recentMovements.map(
-              (movement) => (
-                <div
-                  key={movement.id}
-                  className="flex items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-4"
-                >
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={`rounded-full px-2 py-1 text-xs font-medium ${
-                          movement.type === "income"
-                            ? "bg-green-100 text-green-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
-                      >
-                        {movement.type === "income"
-                          ? "Ingreso"
-                          : "Gasto"}
-                      </span>
-
-                      {movement.recurring && (
-                        <span className="rounded-full bg-slate-100 px-2 py-1 text-xs text-slate-500">
-                          ↻ Recurrente
-                        </span>
-                      )}
-                    </div>
-
-                    <p className="mt-2 truncate font-semibold text-slate-900">
-                      {movement.category}
-                    </p>
-
-                    <p className="mt-1 truncate text-sm text-slate-500">
-                      {movement.description ||
-                        movement.concept ||
-                        movement.title ||
-                        "Sin descripción"}
-                    </p>
-                  </div>
-
-                  <div className="shrink-0 text-right">
-                    <p
-                      className={`font-bold ${
-                        movement.type === "income"
-                          ? "text-green-600"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {movement.type === "income"
-                        ? "+"
-                        : "-"}
-                      {Number(
-                        movement.amount || 0
-                      ).toLocaleString("es-ES")}{" "}
-                      €
-                    </p>
-
-                    <p className="mt-1 text-xs text-slate-400">
-                      {new Date(
-                        movement.date
-                      ).toLocaleDateString(
-                        "es-ES",
-                        {
-                          day: "2-digit",
-                          month: "short",
-                        }
-                      )}
-                    </p>
-                  </div>
-                </div>
-              )
-            )}
-          </div>
-        )}
-      </section>
-
-      {/* ==================================================
           MODAL — INGRESO RECURRENTE
       ================================================== */}
 
@@ -430,9 +328,7 @@ export default function Balance() {
         }}
       >
         <RecurringIncomeModal
-          recurringIncome={
-            editingRecurringIncome
-          }
+          recurringIncome={editingRecurringIncome}
           onClose={() => {
             setEditingRecurringIncome(null);
             setShowRecurringIncomeModal(false);
@@ -462,9 +358,7 @@ export default function Balance() {
         }}
       >
         <RecurringExpenseModal
-          recurringExpense={
-            editingRecurringExpense
-          }
+          recurringExpense={editingRecurringExpense}
           onClose={() => {
             setEditingRecurringExpense(null);
             setShowRecurringExpenseModal(false);
@@ -514,13 +408,15 @@ export default function Balance() {
 
       <ConfirmModal
         open={movementToDelete !== null}
-        onClose={() =>
-          setMovementToDelete(null)
-        }
+        onClose={() => {
+          setMovementToDelete(null);
+        }}
         onConfirm={() => {
-          removeMovement(
-            movementToDelete
-          );
+          if (movementToDelete === null) {
+            return;
+          }
+
+          removeMovement(movementToDelete);
           setMovementToDelete(null);
         }}
         title="Eliminar movimiento"
@@ -532,16 +428,19 @@ export default function Balance() {
       ================================================== */}
 
       <ConfirmModal
-        open={
-          recurringIncomeToDelete !== null
-        }
-        onClose={() =>
-          setRecurringIncomeToDelete(null)
-        }
+        open={recurringIncomeToDelete !== null}
+        onClose={() => {
+          setRecurringIncomeToDelete(null);
+        }}
         onConfirm={() => {
+          if (recurringIncomeToDelete === null) {
+            return;
+          }
+
           removeRecurringIncome(
             recurringIncomeToDelete
           );
+
           setRecurringIncomeToDelete(null);
         }}
         title="Eliminar ingreso recurrente"
@@ -553,16 +452,19 @@ export default function Balance() {
       ================================================== */}
 
       <ConfirmModal
-        open={
-          recurringExpenseToDelete !== null
-        }
-        onClose={() =>
-          setRecurringExpenseToDelete(null)
-        }
+        open={recurringExpenseToDelete !== null}
+        onClose={() => {
+          setRecurringExpenseToDelete(null);
+        }}
         onConfirm={() => {
+          if (recurringExpenseToDelete === null) {
+            return;
+          }
+
           removeRecurringExpense(
             recurringExpenseToDelete
           );
+
           setRecurringExpenseToDelete(null);
         }}
         title="Eliminar gasto recurrente"

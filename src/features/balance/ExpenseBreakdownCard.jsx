@@ -182,7 +182,7 @@ export default function ExpenseBreakdownCard({
           ================================================== */}
 
 
-          <div className="mt-5 grid grid-cols-1 items-center gap-6 lg:grid-cols-[minmax(280px,0.9fr)_minmax(300px,1.1fr)]">
+          <div className="mt-8 grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(360px,1fr)_minmax(360px,1fr)]">
 
 
             {/* ==================================================
@@ -190,7 +190,7 @@ export default function ExpenseBreakdownCard({
             ================================================== */}
 
 
-            <div className="relative h-80 w-full overflow-visible">
+            <div className="relative h-[360px] w-full overflow-visible">
               {/* ----------------------------------------------
                   TOTAL EN EL CENTRO
               ---------------------------------------------- */}
@@ -223,8 +223,8 @@ export default function ExpenseBreakdownCard({
                     data={data}
                     cx="50%"
                     cy="50%"
-                    innerRadius={72}
-                    outerRadius={105}
+                    innerRadius={80}
+                    outerRadius={115}
                     paddingAngle={3}
                     dataKey="value"
                     nameKey="name"
