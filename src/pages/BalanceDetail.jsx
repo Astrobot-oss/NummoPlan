@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 
-import PageHeader from "../../components/PageHeader";
-import { useBalance } from "../../context/BalanceContext";
+import PageHeader from "../components/PageHeader";
+import { useBalance } from "../context/BalanceContext";
 
 
-import ExpenseBreakdownCard from "../../features/balance/ExpenseBreakdownCard";
+import ExpenseBreakdownCard from "../features/balance/ExpenseBreakdownCard";
 
 
 import {
@@ -14,10 +14,10 @@ import {
   getBalanceStats,
   getMonthlyStats,
   getAvailableBalanceMonths,
-} from "../../domain/balanceCalculations";
+} from "../domain/balanceCalculations";
 
 
-import { generateMonthlyInsights } from "../../domain/insightsCalculations";
+import { generateMonthlyInsights } from "../domain/insightsCalculations";
 
 
 export default function BalanceDetail() {
