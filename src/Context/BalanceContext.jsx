@@ -1,4 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const BalanceContext = createContext(null);
 
@@ -18,11 +23,15 @@ function normalizeBalance(data) {
       ? data.movements
       : [],
 
-    recurringIncome: Array.isArray(data?.recurringIncome)
+    recurringIncome: Array.isArray(
+      data?.recurringIncome
+    )
       ? data.recurringIncome
       : [],
 
-    recurringExpense: Array.isArray(data?.recurringExpense)
+    recurringExpense: Array.isArray(
+      data?.recurringExpense
+    )
       ? data.recurringExpense
       : [],
 
@@ -34,23 +43,51 @@ function normalizeBalance(data) {
         : {},
 
     defaultTargetSavings:
-      Number.isFinite(Number(data?.defaultTargetSavings)) &&
+      Number.isFinite(
+        Number(data?.defaultTargetSavings)
+      ) &&
       Number(data.defaultTargetSavings) >= 0
         ? Number(data.defaultTargetSavings)
         : 300,
   };
 }
 
+function getDateKey(date) {
+  const year = date.getFullYear();
+  const month = String(
+    date.getMonth() + 1
+  ).padStart(2, "0");
+  const day = String(
+    date.getDate()
+  ).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function getYesterdayDateKey() {
+  const yesterday = new Date();
+
+  yesterday.setDate(
+    yesterday.getDate() - 1
+  );
+
+  return getDateKey(yesterday);
+}
+
 export function BalanceProvider({ children }) {
   const [balance, setBalance] = useState(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    const saved = localStorage.getItem(
+      LOCAL_STORAGE_KEY
+    );
 
     if (!saved) {
       return initialData;
     }
 
     try {
-      return normalizeBalance(JSON.parse(saved));
+      return normalizeBalance(
+        JSON.parse(saved)
+      );
     } catch (error) {
       console.error(
         "Error al cargar los datos de balance",
@@ -68,21 +105,27 @@ export function BalanceProvider({ children }) {
     );
   }, [balance]);
 
-  // ------------------------
+  // ============================================================
   // MOVIMIENTOS
-  // ------------------------
+  // ============================================================
 
   const createMovement = (movement) => {
     setBalance((prev) => ({
       ...prev,
+
       movements: [
         {
           ...movement,
-          id: movement.id ?? Date.now(),
+
+          id:
+            movement.id ??
+            Date.now(),
+
           date:
             movement.date ??
             new Date().toISOString(),
         },
+
         ...prev.movements,
       ],
     }));
@@ -91,112 +134,194 @@ export function BalanceProvider({ children }) {
   const editMovement = (updatedMovement) => {
     setBalance((prev) => ({
       ...prev,
-      movements: prev.movements.map((movement) =>
-        movement.id === updatedMovement.id
-          ? updatedMovement
-          : movement
-      ),
+
+      movements:
+        prev.movements.map(
+          (movement) =>
+            movement.id ===
+            updatedMovement.id
+              ? updatedMovement
+              : movement
+        ),
     }));
   };
 
   const removeMovement = (id) => {
     setBalance((prev) => ({
       ...prev,
-      movements: prev.movements.filter(
-        (movement) => movement.id !== id
-      ),
+
+      movements:
+        prev.movements.filter(
+          (movement) =>
+            movement.id !== id
+        ),
     }));
   };
 
-  // ------------------------
+  // ============================================================
   // INGRESOS RECURRENTES
-  // ------------------------
+  // ============================================================
 
-  const createRecurringIncome = (income) => {
+  const createRecurringIncome = (
+    income
+  ) => {
     setBalance((prev) => ({
       ...prev,
+
       recurringIncome: [
         {
           ...income,
-          id: income.id ?? Date.now(),
+
+          id:
+            income.id ??
+            Date.now(),
         },
+
         ...prev.recurringIncome,
       ],
     }));
   };
 
-  const editRecurringIncome = (updatedIncome) => {
+  const editRecurringIncome = (
+    updatedIncome
+  ) => {
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: prev.recurringIncome.map(
-        (income) =>
-          income.id === updatedIncome.id
-            ? updatedIncome
-            : income
-      ),
+
+      recurringIncome:
+        prev.recurringIncome.map(
+          (income) =>
+            income.id ===
+            updatedIncome.id
+              ? updatedIncome
+              : income
+        ),
     }));
   };
 
-  const removeRecurringIncome = (id) => {
+  /*
+   * No eliminamos físicamente la recurrencia.
+   *
+   * Se conserva en localStorage para que los meses
+   * anteriores sigan pudiendo reconstruirse.
+   *
+   * La recurrencia termina el día anterior a la
+   * eliminación, por lo que no genera movimientos
+   * desde el día de eliminación en adelante.
+   */
+  const removeRecurringIncome = (
+    id
+  ) => {
+    const endDate =
+      getYesterdayDateKey();
+
     setBalance((prev) => ({
       ...prev,
-      recurringIncome: prev.recurringIncome.filter(
-        (income) => income.id !== id
-      ),
+
+      recurringIncome:
+        prev.recurringIncome.map(
+          (income) =>
+            income.id === id
+              ? {
+                  ...income,
+                  endDate,
+                }
+              : income
+        ),
     }));
   };
 
-  // ------------------------
+  // ============================================================
   // GASTOS RECURRENTES
-  // ------------------------
+  // ============================================================
 
-  const createRecurringExpense = (expense) => {
+  const createRecurringExpense = (
+    expense
+  ) => {
     setBalance((prev) => ({
       ...prev,
+
       recurringExpense: [
         {
           ...expense,
-          id: expense.id ?? Date.now(),
+
+          id:
+            expense.id ??
+            Date.now(),
         },
+
         ...prev.recurringExpense,
       ],
     }));
   };
 
-  const editRecurringExpense = (updatedExpense) => {
+  const editRecurringExpense = (
+    updatedExpense
+  ) => {
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: prev.recurringExpense.map(
-        (expense) =>
-          expense.id === updatedExpense.id
-            ? updatedExpense
-            : expense
-      ),
+
+      recurringExpense:
+        prev.recurringExpense.map(
+          (expense) =>
+            expense.id ===
+            updatedExpense.id
+              ? updatedExpense
+              : expense
+        ),
     }));
   };
 
-  const removeRecurringExpense = (id) => {
+  /*
+   * Igual que con los ingresos:
+   *
+   * No borramos físicamente la recurrencia.
+   * Se conserva para poder reconstruir el histórico.
+   *
+   * La fecha final es ayer para que deje de generar
+   * movimientos desde el momento de eliminación.
+   */
+  const removeRecurringExpense = (
+    id
+  ) => {
+    const endDate =
+      getYesterdayDateKey();
+
     setBalance((prev) => ({
       ...prev,
-      recurringExpense: prev.recurringExpense.filter(
-        (expense) => expense.id !== id
-      ),
+
+      recurringExpense:
+        prev.recurringExpense.map(
+          (expense) =>
+            expense.id === id
+              ? {
+                  ...expense,
+                  endDate,
+                }
+              : expense
+        ),
     }));
   };
 
-  // ------------------------
+  // ============================================================
   // OBJETIVO DE AHORRO
-  // ------------------------
+  // ============================================================
 
-  const setDefaultTargetSavings = (amount) => {
+  const setDefaultTargetSavings = (
+    amount
+  ) => {
     const value = Number(amount);
 
-    if (!Number.isFinite(value) || value < 0) {
+    if (
+      !Number.isFinite(value) ||
+      value < 0
+    ) {
       return;
     }
 
     setBalance((prev) => ({
       ...prev,
+
       defaultTargetSavings: value,
     }));
   };
@@ -207,45 +332,42 @@ export function BalanceProvider({ children }) {
     amount
   ) => {
     const value = Number(amount);
-    const key = `${year}-${month}`;
+
+    const key =
+      `${year}-${month}`;
 
     setBalance((prev) => ({
       ...prev,
+
       monthlyTargets: {
         ...prev.monthlyTargets,
+
         [key]:
-          Number.isFinite(value) && value >= 0
+          Number.isFinite(value) &&
+          value >= 0
             ? value
             : prev.monthlyTargets[key],
       },
     }));
   };
 
-  // ------------------------
-  // CONTEXT
-  // ------------------------
-
   return (
     <BalanceContext.Provider
       value={{
         balance,
 
-        // Movimientos
         createMovement,
         editMovement,
         removeMovement,
 
-        // Ingresos recurrentes
         createRecurringIncome,
         editRecurringIncome,
         removeRecurringIncome,
 
-        // Gastos recurrentes
         createRecurringExpense,
         editRecurringExpense,
         removeRecurringExpense,
 
-        // Objetivos
         setDefaultTargetSavings,
         setMonthlyTargetSavings,
       }}
@@ -256,7 +378,8 @@ export function BalanceProvider({ children }) {
 }
 
 export function useBalance() {
-  const context = useContext(BalanceContext);
+  const context =
+    useContext(BalanceContext);
 
   if (!context) {
     throw new Error(

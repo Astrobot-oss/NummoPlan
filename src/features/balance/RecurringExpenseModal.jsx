@@ -5,29 +5,42 @@ export function RecurringExpenseModal({
   recurringExpense,
   onClose,
   onSubmit,
+  onDelete,
 }) {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [frequency, setFrequency] = useState("monthly");
-  const [day, setDay] = useState("1");
-  const [secondDay, setSecondDay] = useState("15");
-  const [targetMonths, setTargetMonths] = useState([
-    "3",
-    "6",
-    "9",
-    "12",
-  ]);
+  const [frequency, setFrequency] =
+    useState("monthly");
 
-  const [startDate, setStartDate] = useState("");
+  const [day, setDay] = useState("1");
+  const [secondDay, setSecondDay] =
+    useState("15");
+
+  const [targetMonths, setTargetMonths] =
+    useState(["3", "6", "9", "12"]);
+
+  const [startDate, setStartDate] =
+    useState("");
 
   useEffect(() => {
     if (recurringExpense) {
-      setTitle(recurringExpense.title || "");
-      setAmount(recurringExpense.amount || "");
-      setFrequency(
-        recurringExpense.frequency || "monthly"
+      setTitle(
+        recurringExpense.title || ""
       );
-      setDay(recurringExpense.day || "1");
+
+      setAmount(
+        recurringExpense.amount || ""
+      );
+
+      setFrequency(
+        recurringExpense.frequency ||
+          "monthly"
+      );
+
+      setDay(
+        recurringExpense.day || "1"
+      );
+
       setSecondDay(
         recurringExpense.secondDay || "15"
       );
@@ -35,7 +48,8 @@ export function RecurringExpenseModal({
       setTargetMonths(
         recurringExpense.targetMonths ||
           (
-            recurringExpense.frequency === "yearly"
+            recurringExpense.frequency ===
+            "yearly"
               ? ["12"]
               : ["3", "6", "9", "12"]
           )
@@ -43,7 +57,9 @@ export function RecurringExpenseModal({
 
       setStartDate(
         recurringExpense.startDate ||
-          new Date().toISOString().split("T")[0]
+          new Date()
+            .toISOString()
+            .split("T")[0]
       );
     } else {
       setTitle("");
@@ -51,10 +67,18 @@ export function RecurringExpenseModal({
       setFrequency("monthly");
       setDay("1");
       setSecondDay("15");
-      setTargetMonths(["3", "6", "9", "12"]);
+
+      setTargetMonths([
+        "3",
+        "6",
+        "9",
+        "12",
+      ]);
 
       setStartDate(
-        new Date().toISOString().split("T")[0]
+        new Date()
+          .toISOString()
+          .split("T")[0]
       );
     }
   }, [recurringExpense]);
@@ -74,9 +98,10 @@ export function RecurringExpenseModal({
           : Date.now().toString() +
             Math.random()
               .toString(36)
-              .substr(2, 9),
+              .substring(2, 11),
 
       title,
+
       amount: Number(amount),
 
       frequency,
@@ -98,25 +123,47 @@ export function RecurringExpenseModal({
     });
   };
 
+  const handleDelete = () => {
+    if (
+      !recurringExpense ||
+      !onDelete
+    ) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `¿Quieres eliminar "${recurringExpense.title}"?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    onDelete(recurringExpense.id);
+  };
+
   const toggleTargetMonth = (month) => {
     if (frequency === "yearly") {
       setTargetMonths([month]);
-    } else {
-      if (targetMonths.includes(month)) {
-        if (targetMonths.length > 1) {
-          setTargetMonths(
-            targetMonths.filter(
-              (m) => m !== month
-            )
-          );
-        }
-      } else {
-        setTargetMonths([
-          ...targetMonths,
-          month,
-        ]);
-      }
+      return;
     }
+
+    if (targetMonths.includes(month)) {
+      if (targetMonths.length > 1) {
+        setTargetMonths(
+          targetMonths.filter(
+            (m) => m !== month
+          )
+        );
+      }
+
+      return;
+    }
+
+    setTargetMonths([
+      ...targetMonths,
+      month,
+    ]);
   };
 
   const monthsList = [
@@ -147,14 +194,12 @@ export function RecurringExpenseModal({
         </h2>
 
         <p className="mt-0.5 text-xs text-slate-500">
-          Configura tus obligaciones fijas periódicas
-          y fechas de cargo.
+          Configura tus obligaciones fijas
+          periódicas y fechas de cargo.
         </p>
       </div>
 
       <div className="space-y-4">
-        {/* CONCEPTO */}
-
         <div>
           <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">
             Concepto
@@ -172,8 +217,6 @@ export function RecurringExpenseModal({
           />
         </div>
 
-        {/* CANTIDAD + FRECUENCIA */}
-
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">
@@ -183,6 +226,7 @@ export function RecurringExpenseModal({
             <input
               type="number"
               step="0.01"
+              min="0"
               required
               value={amount}
               onChange={(e) =>
@@ -201,17 +245,25 @@ export function RecurringExpenseModal({
             <select
               value={frequency}
               onChange={(e) => {
-                const newFreq =
+                const newFrequency =
                   e.target.value;
 
-                setFrequency(newFreq);
+                setFrequency(
+                  newFrequency
+                );
 
-                if (newFreq === "yearly") {
-                  setTargetMonths(["12"]);
+                if (
+                  newFrequency ===
+                  "yearly"
+                ) {
+                  setTargetMonths([
+                    "12",
+                  ]);
                 }
 
                 if (
-                  newFreq === "quarterly"
+                  newFrequency ===
+                  "quarterly"
                 ) {
                   setTargetMonths([
                     "3",
@@ -242,8 +294,6 @@ export function RecurringExpenseModal({
           </div>
         </div>
 
-        {/* FECHA DE INICIO */}
-
         <div>
           <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500">
             Fecha de inicio
@@ -265,8 +315,6 @@ export function RecurringExpenseModal({
           </p>
         </div>
 
-        {/* QUINCENAL */}
-
         {frequency === "biweekly" ? (
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -282,7 +330,7 @@ export function RecurringExpenseModal({
                 onChange={(e) =>
                   setDay(e.target.value)
                 }
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-slate-900"
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
 
@@ -297,9 +345,11 @@ export function RecurringExpenseModal({
                 max="31"
                 value={secondDay}
                 onChange={(e) =>
-                  setSecondDay(e.target.value)
+                  setSecondDay(
+                    e.target.value
+                  )
                 }
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-slate-900"
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
           </div>
@@ -314,22 +364,24 @@ export function RecurringExpenseModal({
               </label>
 
               <div className="grid grid-cols-4 gap-2 sm:grid-cols-6">
-                {monthsList.map((m) => (
+                {monthsList.map((month) => (
                   <button
-                    key={m.id}
+                    key={month.id}
                     type="button"
                     onClick={() =>
-                      toggleTargetMonth(m.id)
+                      toggleTargetMonth(
+                        month.id
+                      )
                     }
                     className={`rounded-xl border px-2 py-2 text-xs font-medium transition-all ${
                       targetMonths.includes(
-                        m.id
+                        month.id
                       )
                         ? "border-slate-900 bg-slate-900 text-white"
                         : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                     }`}
                   >
-                    {m.label}
+                    {month.label}
                   </button>
                 ))}
               </div>
@@ -348,7 +400,7 @@ export function RecurringExpenseModal({
                 onChange={(e) =>
                   setDay(e.target.value)
                 }
-                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-slate-900"
+                className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
               />
             </div>
           </div>
@@ -366,28 +418,40 @@ export function RecurringExpenseModal({
               onChange={(e) =>
                 setDay(e.target.value)
               }
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 transition-all focus:outline-none focus:ring-2 focus:ring-slate-900"
+              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900"
             />
           </div>
         )}
       </div>
 
-      {/* BOTONES */}
+      <div className="flex items-center justify-between gap-3 pt-2">
+        {recurringExpense ? (
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="rounded-2xl border border-red-200 px-5 py-2.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50"
+          >
+            Eliminar
+          </button>
+        ) : (
+          <div />
+        )}
 
-      <div className="flex items-center justify-end gap-3 pt-2">
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-2xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
-        >
-          Cancelar
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-2xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-50"
+          >
+            Cancelar
+          </button>
 
-        <PrimaryButton type="submit">
-          {recurringExpense
-            ? "Guardar cambios"
-            : "Añadir gasto"}
-        </PrimaryButton>
+          <PrimaryButton type="submit">
+            {recurringExpense
+              ? "Guardar cambios"
+              : "Añadir gasto"}
+          </PrimaryButton>
+        </div>
       </div>
     </form>
   );

@@ -19,7 +19,6 @@ import { RecurringExpenseModal } from "../features/balance/RecurringExpenseModal
 import MovementModal from "../features/balance/MovementModal";
 import ExpenseBreakdownSummaryCard from "../features/balance/ExpenseBreakdownSummaryCard";
 
-import { MonthlySavingsChart } from "../features/balance/MonthlySavingsChart";
 import { AccumulatedSavingsChart } from "../features/balance/AccumulatedSavingsChart";
 
 import {
@@ -65,22 +64,29 @@ export default function Balance() {
   // OBJETIVO DE AHORRO
   // --------------------------------------------------
 
-  const [targetSavings, setTargetSavings] = useState(
-    safeBalance.defaultTargetSavings ?? 300
-  );
+  const [targetSavings, setTargetSavings] =
+    useState(
+      safeBalance.defaultTargetSavings ?? 300
+    );
 
   // --------------------------------------------------
   // MODAL — MOVIMIENTO
   // --------------------------------------------------
 
-  const [showMovementModal, setShowMovementModal] =
-    useState(false);
+  const [
+    showMovementModal,
+    setShowMovementModal,
+  ] = useState(false);
 
-  const [editingMovement, setEditingMovement] =
-    useState(null);
+  const [
+    editingMovement,
+    setEditingMovement,
+  ] = useState(null);
 
-  const [movementToDelete, setMovementToDelete] =
-    useState(null);
+  const [
+    movementToDelete,
+    setMovementToDelete,
+  ] = useState(null);
 
   // --------------------------------------------------
   // MODAL — INGRESO RECURRENTE
@@ -137,41 +143,32 @@ export default function Balance() {
   // DATOS CALCULADOS
   // --------------------------------------------------
 
-  const summary = getBalanceSummary(safeBalance);
+  const summary =
+    getBalanceSummary(safeBalance);
 
-  const historicalData = getHistoricalStats(
-    safeBalance,
-    6,
-    targetSavings
-  );
+  const historicalData =
+    getHistoricalStats(
+      safeBalance,
+      6,
+      targetSavings
+    );
 
-  const insights = generateMonthlyInsights(
-    safeBalance,
-    targetSavings
-  );
+  const insights =
+    generateMonthlyInsights(
+      safeBalance,
+      targetSavings
+    );
 
   // --------------------------------------------------
   // ACTIVIDAD DEL MES ACTUAL
   // --------------------------------------------------
 
-  const currentMonthMovements = getMovementsByMonth(
-    safeBalance,
-    currentYear,
-    currentMonth
-  );
-
-  const recentMovements = currentMonthMovements
-    .slice()
-    .sort(
-      (a, b) =>
-        new Date(b.date) -
-        new Date(a.date)
-    )
-    .slice(0, 5);
-
-  // Evita que el linter marque recentMovements
-  // como variable sin utilizar.
-  void recentMovements;
+  const currentMonthMovements =
+    getMovementsByMonth(
+      safeBalance,
+      currentYear,
+      currentMonth
+    );
 
   // --------------------------------------------------
   // RUTA DEL DETALLE DEL MES ACTUAL
@@ -185,7 +182,7 @@ export default function Balance() {
   // --------------------------------------------------
 
   return (
-    <div>
+    <div className="space-y-10">
       {/* ==================================================
           CABECERA
       ================================================== */}
@@ -194,7 +191,9 @@ export default function Balance() {
         title="Balance"
         description="Comprende realmente qué ocurre con tu dinero."
         action={
-          <PrimaryButton onClick={handleNewMovement}>
+          <PrimaryButton
+            onClick={handleNewMovement}
+          >
             Nuevo movimiento
           </PrimaryButton>
         }
@@ -228,21 +227,17 @@ export default function Balance() {
       ================================================== */}
 
       <section>
-        <div className="mb-4">
+        <div className="mb-5">
           <h2 className="text-xl font-semibold text-slate-900">
             Evolución
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            Cómo está evolucionando tu ahorro a lo largo del tiempo.
+            Comprueba cómo evoluciona tu ahorro frente a la meta que te has marcado.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-          <MonthlySavingsChart
-            historicalData={historicalData}
-          />
-
+        <div className="w-full">
           <AccumulatedSavingsChart
             historicalData={historicalData}
           />
@@ -254,14 +249,13 @@ export default function Balance() {
       ================================================== */}
 
       <section>
-        <div className="mb-4">
+        <div className="mb-5">
           <h2 className="text-xl font-semibold text-slate-900">
             Organización del dinero
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            Consulta dónde estás gastando y qué movimientos tienes
-            previstos.
+            Consulta dónde estás gastando y qué movimientos tienes previstos.
           </p>
         </div>
 
@@ -328,7 +322,9 @@ export default function Balance() {
         }}
       >
         <RecurringIncomeModal
-          recurringIncome={editingRecurringIncome}
+          recurringIncome={
+            editingRecurringIncome
+          }
           onClose={() => {
             setEditingRecurringIncome(null);
             setShowRecurringIncomeModal(false);
@@ -358,7 +354,9 @@ export default function Balance() {
         }}
       >
         <RecurringExpenseModal
-          recurringExpense={editingRecurringExpense}
+          recurringExpense={
+            editingRecurringExpense
+          }
           onClose={() => {
             setEditingRecurringExpense(null);
             setShowRecurringExpenseModal(false);
@@ -428,12 +426,16 @@ export default function Balance() {
       ================================================== */}
 
       <ConfirmModal
-        open={recurringIncomeToDelete !== null}
+        open={
+          recurringIncomeToDelete !== null
+        }
         onClose={() => {
           setRecurringIncomeToDelete(null);
         }}
         onConfirm={() => {
-          if (recurringIncomeToDelete === null) {
+          if (
+            recurringIncomeToDelete === null
+          ) {
             return;
           }
 
@@ -452,12 +454,16 @@ export default function Balance() {
       ================================================== */}
 
       <ConfirmModal
-        open={recurringExpenseToDelete !== null}
+        open={
+          recurringExpenseToDelete !== null
+        }
         onClose={() => {
           setRecurringExpenseToDelete(null);
         }}
         onConfirm={() => {
-          if (recurringExpenseToDelete === null) {
+          if (
+            recurringExpenseToDelete === null
+          ) {
             return;
           }
 

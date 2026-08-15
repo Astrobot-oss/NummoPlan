@@ -194,10 +194,22 @@ export default function BalanceDetail() {
     if (!movementToDelete) return;
 
     if (movementToDelete.recurring && movementToDelete.recurringId) {
+      // La fecha de finalización es inclusiva:
+      // si se finaliza en marzo, marzo sigue contando.
+      const endDate = `${selectedYear}-${String(
+        selectedMonth + 1
+      ).padStart(2, "0")}-01`;
+
       if (movementToDelete.type === "income") {
-        removeRecurringIncome(movementToDelete.recurringId);
+        removeRecurringIncome(
+          movementToDelete.recurringId,
+          endDate
+        );
       } else {
-        removeRecurringExpense(movementToDelete.recurringId);
+        removeRecurringExpense(
+          movementToDelete.recurringId,
+          endDate
+        );
       }
 
       setMovementToDelete(null);
@@ -810,24 +822,22 @@ function MovementRow({ movement, onEdit, onDelete }) {
 
       <div className="flex flex-wrap items-center justify-start gap-2 md:justify-end">
         {!isRecurring && (
-  <>
-    <button
-      type="button"
-      onClick={onEdit}
-      className="whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
-    >
-      Editar
-    </button>
+          <button
+            type="button"
+            onClick={onEdit}
+            className="whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+          >
+            Editar
+          </button>
+        )}
 
-    <button
-      type="button"
-      onClick={onDelete}
-      className="whitespace-nowrap rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition hover:bg-red-100"
-    >
-      Eliminar
-    </button>
-  </>
-)}
+        <button
+          type="button"
+          onClick={onDelete}
+          className="whitespace-nowrap rounded-lg border border-red-100 bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition hover:bg-red-100"
+        >
+          Eliminar
+        </button>
       </div>
     </div>
   );
